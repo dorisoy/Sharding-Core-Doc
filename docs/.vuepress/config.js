@@ -73,7 +73,7 @@ module.exports = config({
           {
             text: "使用指南",
             icon: "creative",
-            link: "/zh/guide/",
+            link: "/zh/guide/introduce",
           },
           // {
           //   text: "项目指南",
