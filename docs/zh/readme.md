@@ -40,7 +40,7 @@ postList: none
 
 ## 🔔交流QQ群
 ::: center
-<img src="https://cdn.jsdelivr.net/gh/xugaoyi/image_store@master/blog/QQ20210730-002949@2x.57m20hgqvog0.png" alt="群号: 771630778" class="no-zoom" style="width:200px;">
+<img src="/join-qq-group.jpg" alt="群号: 771630778" class="no-zoom" style="width:200px;">
 
 #### ShardingCore官方QQ群: 771630778
 :::

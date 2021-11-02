@@ -3,7 +3,7 @@ const { config } = require("vuepress-theme-hope");
 module.exports = config({
   title: "ShardingCore官方文档",
   description: "ShardingCore官方文档",
-
+  base:'/sharding-core-doc/',
   dest: "./dist",
 
   head: [
@@ -33,26 +33,26 @@ module.exports = config({
       description: "ShardingCore官方文档",
     },
   },
-
   themeConfig: {
     logo: "/logo.svg",
+    docsDir:"docs",
     hostname: "https://vuepress-theme-hope-demo.mrhope.site",
 
     author: "xuejiaming",
-    repo: "https://github.com/xuejmnet/sharding-core-doc",
+    docsRepo: "https://github.com/xuejmnet/sharding-core-doc",
+    repo: "https://github.com/xuejmnet/sharding-core",
 
     nav: [
-      { text: "Guide", link: "/", icon: "home" },
       {
         text: "Guide",
         icon: "creative",
         link: "/guide/",
       },
-      {
-        text: "Docs",
-        link: "https://vuepress-theme-hope.github.io/",
-        icon: "note",
-      },
+      // {
+      //   text: "Docs",
+      //   link: "https://vuepress-theme-hope.github.io/",
+      //   icon: "note",
+      // },
     ],
 
     sidebar: {
@@ -75,11 +75,11 @@ module.exports = config({
             icon: "creative",
             link: "/zh/guide/",
           },
-          {
-            text: "项目指南",
-            icon: "note",
-            link: "https://vuepress-theme-hope.github.io/zh/",
-          },
+          // {
+          //   text: "项目指南",
+          //   icon: "note",
+          //   link: "https://vuepress-theme-hope.github.io/zh/",
+          // },
         ],
         sidebar: {
           "/zh/": [
@@ -108,6 +108,7 @@ module.exports = config({
               prefix: "adv/",
               children: ["code-first","pagination","dynamic-table","batch-operate","transaction"],
             },
+            "question",
           ],
         },
       },

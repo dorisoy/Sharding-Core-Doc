@@ -1,77 +1,52 @@
 ---
 home: true
 icon: home
-title: Project home
+title: 项目主页
 heroImage: /logo.svg
-heroText: Project name
-tagline: You can place the description of the project here.
+heroText: ShardingCore
+tagline: 🚀基于efcore易用、简单、高性能、普适性分表分库读写分离组件
+
 action:
-  - text: How to Use 💡
-    link: /guide/
+  - text: Get Started →
+    link: /zh/guide/introduce
     type: primary
 
-  - text: Blog homepage 🏠
-    link: /
+  # - text: 博客主页 🏠
+  #   link: /zh/
 
-features:
-  - title: Markdown Enhance 🧰
-    details: Add align, sup/sub script, footnote, tasklist, tex, flowchart, diagram, mark and presentation support in Markdown
-    link: https://vuepress-theme-hope.github.io/guide/markdown/
+features: # 可选的
+  - title: 高性能分表分库
+    details: 客户端分表分库组件，拥有媲美原生efcore的性能和最佳的分表分库数据聚合解决方案
+  - title: 无感使用
+    details: 以DbContext为核心进行数据扩展，让开发者在配置完成后几乎零学习成本使用，完美的happy coding
+  - title: 自定义路由
+    details: 专门为各种分表分库数据存储提供路由解决方案，支持90%的业务场景分表分库规则，提供多个默认分表分库路由
 
-  - title: Pageviews and comments 💬
-    details: Start pageview statistics and comment support with Valine and Vssue
-    link: https://vuepress-theme-hope.github.io/guide/feature/comment/
-
-  - title: Article information display ℹ
-    details: Add author, writing date, reading time, word count and other information to your article
-    link: https://vuepress-theme-hope.github.io/guide/feature/page-info/
-
-  - title: Blog support 📝
-    details: Add date, tags and category to your articles, then article, tag, category and timeline list will be auto generated
-    link: https://vuepress-theme-hope.github.io/guide/blog/intro/
-
-  - title: Article Encryption 🔐
-    details: Encrypt you article based on path and folders, so that only the one you want could see them
-    link: https://vuepress-theme-hope.github.io/guide/feature/encrypt/
-
-  - title: Custom theme color 🎨
-    details: Supports custom theme colors and allows users to switch between preset theme colors
-    link: https://vuepress-theme-hope.github.io/guide/interface/theme-color/
-
-  - title: Dark Mode 🌙
-    details: Switch between light and dark modes freely
-    link: https://vuepress-theme-hope.github.io/guide/interface/darkmode/
-
-  - title: SEO enhancement ⚒
-    details: Optimize pages for search engines.
-    link: https://vuepress-theme-hope.github.io/guide/feature/seo/
-
-  - title: Sitemap 🗺
-    details: Generate a Sitemap for your website
-    link: https://vuepress-theme-hope.github.io/guide/feature/sitemap/
-
-  - title: Feed support 📡
-    details: You can generate feed, and let users to subcribe it
-    link: https://vuepress-theme-hope.github.io/guide/feature/feed/
-
-  - title: PWA support 📲
-    details: The built-in PWA plugin will make your website more like an APP.
-    link: https://vuepress-theme-hope.github.io/guide/feature/pwa/
-
-  - title: TS support 🔧
-    details: Turn on TypeScript support for your VuePress
-    link: https://vuepress-theme-hope.github.io/guide/feature/typescript/
-
-  - title: More new features ✨
-    details: Including icon support, path navigation, footer support, fullscreen button, blog homepage, etc.
-    link: https://vuepress-theme-hope.github.io/guide/feature/
-
-copyrightText: false
-footer: MIT Licensed | Copyright © 2019-present Mr. Hope
+# 文章列表显示方式: detailed 默认，显示详细版文章列表（包括作者、分类、标签、摘要、分页等）| simple => 显示简约版文章列表（仅标题和日期）| none 不显示文章列表
+postList: none
 ---
 
-This is an example of a normal homepage. You can place your main content here.
 
-To use this layout, you need to set `home: true` in the page front matter.
+<br/>
+<p align="center">
 
-For related descriptions of configuration items, please see [Project HomePage Layout Config](https://vuepress-theme-hope.github.io/guide/layout/home/).
+::: center
+  <a href="https://www.nuget.org/packages/ShardingCore" target="_blank"><img src="https://img.shields.io/nuget/v/ShardingCore.svg?style=flat-square" alt="nuget" class="no-zoom"></a>
+  <a href="https://www.nuget.org/stats/packages/ShardingCore?groupby=Version" target="_blank"><img src="https://img.shields.io/nuget/dt/ShardingCore.svg?style=flat-square" alt="nuget" class="no-zoom"></a>
+  <a href="https://github.com/xuejmnet/sharding-core/blob/main/LICENSE" target="_blank"><img src="https://img.shields.io/badge/license-Apache 2-blue" alt="license" class="no-zoom"></a>
+:::
+</p>
+
+
+## 🔔交流QQ群
+::: center
+<img src="join-qq-group.jpg" alt="群号: 771630778" class="no-zoom" style="width:200px;">
+
+#### ShardingCore官方QQ群: 771630778
+:::
+
+
+<br/>
+
+## 许可证
+[Apache-2.0 License](https://github.com/xuejmnet/sharding-core/blob/main/LICENSE)
