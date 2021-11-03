@@ -8,7 +8,7 @@ tagline: 🚀基于efcore易用、简单、高性能、普适性分表分库读�
 
 action:
   - text: 开始使用 →
-    link: /zh/guide/introduce
+    link: /guide/
     type: primary
 
   # - text: 博客主页 🏠
@@ -40,7 +40,7 @@ postList: none
 
 ## 🔔交流QQ群
 ::: center
-<img src="join-qq-group.jpg" alt="群号: 771630778" class="no-zoom" style="width:200px;">
+<img src="https://cdn.jsdelivr.net/gh/xugaoyi/image_store@master/blog/QQ20210730-002949@2x.57m20hgqvog0.png" alt="群号: 771630778" class="no-zoom" style="width:200px;">
 
 #### ShardingCore官方QQ群: 771630778
 :::

@@ -7,8 +7,8 @@ heroText: ShardingCore
 tagline: 🚀基于efcore易用、简单、高性能、普适性分表分库读写分离组件
 
 action:
-  - text: Get Started →
-    link: /zh/guide/introduce
+  - text: 开始使用 →
+    link: /guide/introduce
     type: primary
 
   # - text: 博客主页 🏠

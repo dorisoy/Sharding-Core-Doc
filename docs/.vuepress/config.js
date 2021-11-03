@@ -26,11 +26,14 @@ module.exports = config({
 
   locales: {
     "/": {
-      lang: "en-US",
+      lang: "zh-CN",
+        title: "ShardingCore官方文档",
+        description: "ShardingCore官方文档",
     },
-    "/zh/": {
-      title: "ShardingCore官方文档",
-      description: "ShardingCore官方文档",
+    "/en/": {
+      lang: "en-US",
+      title: "ShardingCore Document",
+      description: "ShardingCore Document",
     },
   },
   themeConfig: {
@@ -44,9 +47,9 @@ module.exports = config({
 
     nav: [
       {
-        text: "Guide",
+        text: "使用指南",
         icon: "creative",
-        link: "/guide/",
+        link: "/guide/introduce",
       },
       // {
       //   text: "Docs",
@@ -59,16 +62,35 @@ module.exports = config({
       "/": [
         "",
         {
-          title: "Guide",
+          title: "指南",
           icon: "creative",
           prefix: "guide/",
-          children: ["", "page", "markdown", "disable", "encrypt"],
+          children: ["introduce","terminology","quick-start","params-confg", "sharding-table", "sharding-data-source", "sharding-all","auto-track", "read-write"],
         },
+        {
+          title: "查询",
+          icon: "creative",
+          prefix: "query/",
+          children: ["single-entity-query","multi-entity-query","group-by-query"],
+        },
+        {
+          title: "路由",
+          icon: "creative",
+          prefix: "sharding-route/",
+          children: ["default-route","customer-route","manual-route","assert-route"],
+        },
+        {
+          title: "高级",
+          icon: "creative",
+          prefix: "adv/",
+          children: ["code-first","pagination","dynamic-table","batch-operate","transaction"],
+        },
+        "question",
       ],
     },
 
     locales: {
-      "/zh/": {
+      "/en/": {
         nav: [
           {
             text: "使用指南",
@@ -82,7 +104,7 @@ module.exports = config({
           // },
         ],
         sidebar: {
-          "/zh/": [
+          "/en/": [
             "",
             {
               title: "指南",
