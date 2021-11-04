@@ -17,7 +17,7 @@ sharding-core 目前为止以efcore版本号作为主版本，所以您会在nug
 
 ```shell
 # 请对应安装您需要的版本
-PM> Install-Package ShardingCore -Version LastVersion
+PM> Install-Package ShardingCore
 ```
 
 ## 使用efcore
@@ -34,7 +34,7 @@ cd EFCoreSharding
 dotnet new console
 
 # 添加efcore 测试我们采用sqlserver作为测试数据库，其他数据库用法一致
-dotnet add package Microsoft.EntityFrameworkCore.SqlServer --version 5.0.11
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer
 ```
 
 ::: warning 注意
@@ -143,7 +143,7 @@ class Program
 
 ### 添加sharding-core包
 ```shell
-dotnet add package ShardingCore --version 5.3.1.19
+dotnet add package ShardingCore
 ```
 ::: tip 提示
   根据项目自己选择sharding-core 2.x/3.x/5.x......的最新版本.
@@ -335,3 +335,6 @@ class Program
   4. 是否添加了分表路由`AddShardingTableRoute(op =>{op.AddShardingTableRoute<OrderVirtualTableRoute>();})`
   5. 是否启动了分表启动器`buildServiceProvider.GetRequiredService<IShardingBootstrapper>().Start();`
 :::
+
+## Demo
+[EFCoreSharding](https://github.com/xuejmnet/ShardingCoreDocDemo/tree/main/EFCoreSharding)

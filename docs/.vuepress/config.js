@@ -65,7 +65,25 @@ module.exports = config({
           title: "指南",
           icon: "creative",
           prefix: "guide/",
-          children: ["introduce","terminology","quick-start","params-confg", "sharding-table", "sharding-data-source", "sharding-all","auto-track", "read-write"],
+          children: ["introduce","terminology","quick-start","params-confg","auto-track", "read-write"],
+        },
+        {
+          title: "分表",
+          icon: "stack",
+          prefix: "sharding-table/",
+          children: ["init","query","update","delete"],
+        },
+        {
+          title: "分库",
+          icon: "mysql",
+          prefix: "sharding-data-source/",
+          children: ["init","query","update","delete"],
+        },
+        {
+          title: "分库且分库",
+          icon: "overflow",
+          prefix: "sharding-all/",
+          children: ["init","query","update","delete"],
         },
         {
           title: "查询",

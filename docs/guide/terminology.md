@@ -13,7 +13,7 @@ category: 使用指南
 
 ```csharp
 //直接获取
-serviceProvicer.GetService<IEntityMetadataManager<TShardingDbContext>>();
+ShardingContainer.GetService<IEntityMetadataManager<TShardingDbContext>>();
 //通过非泛型方法获取
 (IEntityMetadataManager)ShardingContainer.GetService(typeof(IEntityMetadataManager<>).GetGenericType0(shardingDbContext.GetType()));
 ```
@@ -26,9 +26,20 @@ entityMetadataManager.TryGet(EntityType);
 entityMetadataManager.TryGet<TEntity>(TEntity);
 ```
 
+### IVirtualDataSource
 
+`IVirtualDataSource<TShardingDbContext>`虚拟数据源，虚拟数据源用于记录当前分库拥有多少个数据源名称(拥有多少个:DataSourceName),
+整个dbcontext只有一个，可以通过依赖注入获取 .
+```csharp
+//直接获取
+ShardingContainer.GetService<IVirtualDataSource<TShardingDbContext>>();
+//通过非泛型方法获取
+(IVirtualDataSource)ShardingContainer.GetService(typeof(IVirtualDataSource<>).GetGenericType0(shardingDbContext.GetType()));
+```
 
-## 分库概念
+::: tip 自定义标题
+因为`IVirtualDataSource<TShardingDbContext>`继承`IVirtualDataSource`，并且所有的接口都在`IVirtualDataSource`但是注入为了区分多个`DdbContext`之间所以采用泛型注入，其他接口也是同理
+:::
 
 ### DataSourceName
 数据源名称，默认针对`ShardingCore`每个链接都对应其自己的数据源，都有属于自己的数据源名称和数据源的链接。无论是否分表数据源名称都会有，只不过因为仅分表状态下只链接单个数据库，所以数据源名称在整个框架下只有一个，所以如果您是分表那么数据源名称可以随便添加，因为默认的数据源名称有且只有一个。
@@ -46,21 +57,19 @@ entityMetadataManager.TryGet<TEntity>(TEntity);
 ```
 通过上面我们可以看到我们其实分了三个数据库分别是`ds0`,`ds1`,`ds2`,使用分表的时候需要注意，仅分表对象才会进入分表，其他所有没有分表路由的对象将全部走DefaultDataSourceName数据库。
 
-### IVirtualDataSource
-
-`IVirtualDataSource<TShardingDbContext>`虚拟数据源，虚拟数据源用于记录当前分库拥有多少个数据源名称(拥有多少个:DataSourceName),
-整个dbcontext只有一个，可以通过依赖注入获取 .
+### IShardingTableCreator
+分表对象创建,可以创建对应的分表指定对应的表后缀即可
 ```csharp
 //直接获取
-serviceProvicer.GetService<IVirtualDataSource<TShardingDbContext>>();
+ShardingContainer.GetService<IShardingTableCreator<TShardingDbContext>>();
 //通过非泛型方法获取
-(IVirtualDataSource)ShardingContainer.GetService(typeof(IVirtualDataSource<>).GetGenericType0(shardingDbContext.GetType()));
+(IShardingTableCreator)ShardingContainer.GetService(typeof(IShardingTableCreator<>).GetGenericType0(shardingDbContext.GetType()));
+
 ```
 
-::: tip 自定义标题
-因为`IVirtualDataSource<TShardingDbContext>`继承`IVirtualDataSource`，并且所有的接口都在`IVirtualDataSource`但是注入为了区分多个`DdbContext`之间所以采用泛型注入，其他接口也是同理
-:::
 
+
+## 分库概念
 
 ### IVirtualDataSourceRoute
 
@@ -93,7 +102,7 @@ virtualDataSource.GetRoute<TEntity>();
 ```csharp
 
 //获取IVirtualTableManager
-serviceProvicer.GetService<IVirtualTableManager<TShardingDbContext>>();
+ShardingContainer.GetService<IVirtualTableManager<TShardingDbContext>>();
 //通过非泛型方法获取
 (IVirtualTableManager)ShardingContainer.GetService(typeof(IVirtualTableManager<>).GetGenericType0(shardingDbContext.GetType()));
 ```

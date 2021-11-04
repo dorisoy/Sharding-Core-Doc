@@ -1,5 +1,5 @@
 ---
-icon: launch
-title: 分表
+icon: mysql
+title: 删除
 category: 使用指南
 ---
