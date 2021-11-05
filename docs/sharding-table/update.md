@@ -4,6 +4,9 @@ title: 修改
 category: 使用指南
 ---
 
+## Demo
+本次分表的demo源码：[EFCoreShardingTable](https://github.com/xuejmnet/ShardingCoreDocDemo/tree/main/EFCoreShardingTable)
+
 ## 自动追踪修改
 
 ```csharp

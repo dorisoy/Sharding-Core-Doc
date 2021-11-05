@@ -4,6 +4,9 @@ title: 查询
 category: 使用指南
 ---
 
+## Demo
+本次分表的demo源码：[EFCoreShardingTable](https://github.com/xuejmnet/ShardingCoreDocDemo/tree/main/EFCoreShardingTable)
+
 ## 单对象简单查询
 
 对`SysUser`和`Order`进行查询
