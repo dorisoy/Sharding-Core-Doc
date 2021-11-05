@@ -4,6 +4,10 @@ title: 初始化
 category: 使用指南
 ---
 
+
+## Demo
+本次分表的demo源码：[EFCoreShardingTable](https://github.com/xuejmnet/ShardingCoreDocDemo/tree/main/EFCoreShardingTable)
+
 ## 分表使用
 
 先拟定一个场景目前有用户表`SysUser`和订单表`Order`,再添加一个`Setting`配置表，用户我们按用户id进行取模分表，订单我们按时间月进行分表,配置表我们部分表
@@ -279,6 +283,3 @@ PM> Install-Package Microsoft.Extensions.Logging.Console
 都改成`builder.UseSqlServer(conStr).UseLoggerFactory(efLogger);`
 
 启动后我们将可以看到数据库和表会被自动创建，并且会将种子数据进行插入到内部供我们可以查询测试
-
-## Demo
-[EFCoreShardingTable](https://github.com/xuejmnet/ShardingCoreDocDemo/tree/main/EFCoreShardingTable)

@@ -4,6 +4,10 @@ title: 快速上手
 category: 使用指南
 ---
 
+
+## Demo
+本次demo源码：[EFCoreSharding](https://github.com/xuejmnet/ShardingCoreDocDemo/tree/main/EFCoreSharding)
+
 ## 版本
 
 sharding-core 目前为止以efcore版本号作为主版本，所以您会在nuget上看到2.x,3.x,5.x的版本,如果需要请安装最新版nuget上的efcore版本对应的sharding-core版本
@@ -335,6 +339,3 @@ class Program
   4. 是否添加了分表路由`AddShardingTableRoute(op =>{op.AddShardingTableRoute<OrderVirtualTableRoute>();})`
   5. 是否启动了分表启动器`buildServiceProvider.GetRequiredService<IShardingBootstrapper>().Start();`
 :::
-
-## Demo
-[EFCoreSharding](https://github.com/xuejmnet/ShardingCoreDocDemo/tree/main/EFCoreSharding)
