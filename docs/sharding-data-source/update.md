@@ -6,7 +6,7 @@ category: 使用指南
 
 
 ## Demo
-本次分表的demo源码：[EFCoreShardingTable](https://github.com/xuejmnet/sharding-core/tree/main/samples/Sample.SqlServerShardingDataSource)
+本次分表的demo源码：[SqlServerShardingDataSource](https://github.com/xuejmnet/sharding-core/tree/main/samples/Sample.SqlServerShardingDataSource)
 
 ## 自动追踪修改
 
@@ -41,7 +41,8 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
         }
 ````
 ```shell
-iString), @p1='?' (Size = 50) (DbType = AnsiString)], CommandType='Text', CommandTimeout='30']
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@p2='?' (Size = 50) (DbType = AnsiString), @p0='?' (Size = 50) (DbType = AnsiString), @p1='?' (Size = 50) (DbType = AnsiString)], CommandType='Text', CommandTimeout='30']
       SET NOCOUNT ON;
       UPDATE [SysUser] SET [Area] = @p0, [Name] = @p1
       WHERE [Id] = @p2;

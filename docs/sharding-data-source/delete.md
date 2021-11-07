@@ -6,7 +6,7 @@ category: 使用指南
 
 
 ## Demo
-本次分表的demo源码：[EFCoreShardingTable](https://github.com/xuejmnet/sharding-core/tree/main/samples/Sample.SqlServerShardingDataSource)
+本次分表的demo源码：[SqlServerShardingDataSource](https://github.com/xuejmnet/sharding-core/tree/main/samples/Sample.SqlServerShardingDataSource)
 
 ## 删除数据
 增删改查除了查询稍微在分表+排序的情况下需要注意其实其他操作和efcore基本上一致
