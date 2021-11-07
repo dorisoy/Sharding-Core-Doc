@@ -4,9 +4,17 @@ title: 初始化
 category: 使用指南
 ---
 
+## 介绍
+
+::: tip 分表介绍
+ 1. `sharding-core`支持自定义分表,流式聚合,多表join
+ 2. 虽然框架已经将分表封装的用户毫无感知了,但是也是需要使用者有部分分表的概念的了解
+ 3. 我们吧表A分成A1,A2,A3这三张表,如果你在数据库里还是看到了表A那么就说明程序是不正确的,表A在分表后其实不应该存在了(大部分情况下)
+ 4. `IShardingTableDbContext`这个接口在你需要支持分表的情况下需要加，如果您只是分库那么就不需要添加这个接口
+:::
 
 ## Demo
-本次分表的demo源码：[EFCoreShardingTable](https://github.com/xuejmnet/ShardingCoreDocDemo/tree/main/EFCoreShardingTable)
+本次分表的demo源码：[EFCoreShardingTable](https://github.com/xuejmnet/sharding-core/tree/main/samples/Sample.SqlServerShardingTable)
 
 ## 分表使用
 
@@ -268,9 +276,6 @@ PM> Install-Package Microsoft.EntityFrameworkCore.SqlServer
 ### efcore日志(可选)
 这边为了方便我们观察efcore的执行sql语句我们这边建议对efcore添加日志
 
-```shell
-PM> Install-Package Microsoft.Extensions.Logging.Console
-``` 
 `Startup`添加静态数据
 ```csharp
         public static readonly ILoggerFactory efLogger = LoggerFactory.Create(builder =>
@@ -283,3 +288,6 @@ PM> Install-Package Microsoft.Extensions.Logging.Console
 都改成`builder.UseSqlServer(conStr).UseLoggerFactory(efLogger);`
 
 启动后我们将可以看到数据库和表会被自动创建，并且会将种子数据进行插入到内部供我们可以查询测试
+
+
+<img src="/sharding-table.png">

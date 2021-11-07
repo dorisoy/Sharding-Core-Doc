@@ -1,12 +1,22 @@
 ---
 icon: mysql
-title: 分库
+title: 初始化
 category: 使用指南
 ---
 
+## 介绍
+
+::: tip 分库介绍
+ 1. `sharding-core`支持自定义分库,流式聚合,支持同表join,数据源并非分表的笛卡尔积而是交集,比如我分库的对象和不分库的对象join结果只会查询不分库对象对应的数据源
+ 2. 分库下的分布式事务(支持业务逻辑导致的事务出错可以回滚),网络情况下的事务出错直接忽略除非是第一个提交的事务,第二个数据源提交的事务开始就直接忽略异常。
+:::
+
+## Demo
+本次分库的demo源码：[EFCoreShardingDataSource](https://github.com/xuejmnet/sharding-core/tree/main/samples/Sample.SqlServerShardingDataSource)
+
 ## 分表使用
 
-先拟定一个场景目前有用户表`SysUser`和订单表`Order`,再添加一个`Setting`配置表，用户我们按用户id进行取模分表，订单我们按时间月进行分表,配置表我们部分表
+先拟定一个场景目前有用户表`SysUser`和订单表`Order`，用户我们按用户区域进行分库，订单我们按用户区域分库,配置表我们也按用户区域分表
 首先创建一个空的aspnetcore web api。
 
 ### 安装ShardingCore
@@ -31,6 +41,7 @@ PM> Install-Package Microsoft.EntityFrameworkCore.SqlServer
         public string Id { get; set; }
         public string Payer { get; set; }
         public long Money { get; set; }
+        public string Area { get; set; }
         public OrderStatusEnum OrderStatus { get; set; }
         public DateTime CreationTime { get; set; }
     }
@@ -38,20 +49,15 @@ PM> Install-Package Microsoft.EntityFrameworkCore.SqlServer
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public string SettingCode { get; set; }
-    }
-    public class Setting
-    {
-        public string Code { get; set; }
-        public string Name { get; set; }
+        public string Area { get; set; }
     }
 ```
 
 ### 创建DbContext
-这样我们就创建好了三张表，接下来我们创建我们的`DbContext`
+这样我们就创建好了三张表，接下来我们创建我们的`DbContext`,因为不需要分表所以我们并不需要继承`IShardingTableDbContext`接口
 ```csharp
 
-    public class MyDbContext:AbstractShardingDbContext,IShardingTableDbContext
+    public class MyDbContext:AbstractShardingDbContext
     {
         public MyDbContext(DbContextOptions<MyDbContext> options) : base(options)
         {
@@ -65,6 +71,7 @@ PM> Install-Package Microsoft.EntityFrameworkCore.SqlServer
                 entity.HasKey(o => o.Id);
                 entity.Property(o => o.Id).IsRequired().IsUnicode(false).HasMaxLength(50);
                 entity.Property(o=>o.Payer).IsRequired().IsUnicode(false).HasMaxLength(50);
+                entity.Property(o => o.Area).IsRequired().IsUnicode(false).HasMaxLength(50);
                 entity.Property(o => o.OrderStatus).HasConversion<int>();
                 entity.ToTable(nameof(Order));
             });
@@ -73,59 +80,115 @@ PM> Install-Package Microsoft.EntityFrameworkCore.SqlServer
                 entity.HasKey(o => o.Id);
                 entity.Property(o => o.Id).IsRequired().IsUnicode(false).HasMaxLength(50);
                 entity.Property(o=>o.Name).IsRequired().IsUnicode(false).HasMaxLength(50);
-                entity.Property(o => o.SettingCode).IsRequired().IsUnicode(false).HasMaxLength(50);
+                entity.Property(o => o.Area).IsRequired().IsUnicode(false).HasMaxLength(50);
                 entity.ToTable(nameof(SysUser));
-            });
-            modelBuilder.Entity<Setting>(entity =>
-            {
-                entity.HasKey(o => o.Code);
-                entity.Property(o => o.Code).IsRequired().IsUnicode(false).HasMaxLength(50);
-                entity.Property(o=>o.Name).IsRequired().IsUnicode(false).HasMaxLength(50);
-                entity.ToTable(nameof(Setting));
             });
         }
 
-        public IRouteTail RouteTail { get; set; }
     }
 ```
 ::: tip 自定义标题
  1. 构造函数必须是`DbContextOptions<MyDbContext>`或者`DbContextOptions`
  2. `OnModelCreating`并不是说分表必须要这样，而是你原先efcore怎么使用就怎么使用，efcore配置对象有两种一种是`DbSet`+`Attribute`,另外一种是`OnModelCreating`+`ModelBuilder`,你可以选择你原先在用的任何一种
  3. `AbstractShardingDbContext`这个对象是可以不继承的，但是如果要使用分表分库你必须实现`IShardingTableDbContext`这个接口,因为这个接口实现起来都是一样的所以默认你只需要继承`AbstractShardingDbContext`就可以了
- 4. `IShardingTableDbContext`这个接口在你需要支持分表的情况下需要加，如果您只是分库那么就不需要添加这个接口
 :::
 
 ### 创建虚拟路由
 
-1. 订单表按月分表,这边我们把订单从2021年1月份开始到现在具体
+1. 订单表按用户区域分表,因为分库系统并没有给我提供默认的分库路由,所以需要我们自行实现,我们先假设我们的数据源为A,B,C三个数据源
 ```csharp
 
-    //创建时间按月分表
-    public class OrderVirtualTableRoute:AbstractSimpleShardingMonthKeyDateTimeVirtualTableRoute<Order>
+    
+    public class OrderVirtualDataSourceRoute:AbstractShardingOperatorVirtualDataSourceRoute<Order,string>
     {
-        public override DateTime GetBeginTime()
+        private readonly List<string> _dataSources= new List<string>()
         {
-            return new DateTime(2021, 1, 1);
+            "A", "B", "C"
+        };
+        protected override string ConvertToShardingKey(object shardingKey)
+        {
+            return shardingKey?.ToString() ?? string.Empty;
         }
-        //注意一定要配置或者采用接口+标签也是可以的
-        public override void Configure(EntityMetadataTableBuilder<Order> builder)
+        //我们设置区域就是数据库
+        public override string ShardingKeyToDataSourceName(object shardingKey)
         {
-            builder.ShardingProperty(o => o.CreationTime);
-        }
-    }
-    //用户Id取模3分表
-    public class SysUserVirtualTableRoute:AbstractSimpleShardingModKeyStringVirtualTableRoute<SysUser>
-    {
-        public SysUserVirtualTableRoute() : base(2, 3)
-        {
+            return ConvertToShardingKey(shardingKey);
         }
 
-        public override void Configure(EntityMetadataTableBuilder<SysUser> builder)
+        public override List<string> GetAllDataSourceNames()
         {
-            builder.ShardingProperty(o => o.Id);
+            return _dataSources;
+        }
+
+        public override bool AddDataSourceName(string dataSourceName)
+        {
+            if (_dataSources.Any(o => o == dataSourceName))
+                return false;
+             _dataSources.Add(dataSourceName);
+             return true;
+        }
+
+        protected override Expression<Func<string, bool>> GetRouteToFilter(string shardingKey, ShardingOperatorEnum shardingOperator)
+        {
+
+            var t = ShardingKeyToDataSourceName(shardingKey);
+            switch (shardingOperator)
+            {
+                case ShardingOperatorEnum.Equal: return tail => tail == t;
+                default:
+                {
+                    return tail => true;
+                }
+            }
+        }
+    }
+    public class SysUserVirtualDataSourceRoute : AbstractShardingOperatorVirtualDataSourceRoute<SysUser, string>
+    {
+        private readonly List<string> _dataSources = new List<string>()
+        {
+            "A", "B", "C"
+        };
+        protected override string ConvertToShardingKey(object shardingKey)
+        {
+            return shardingKey?.ToString() ?? string.Empty;
+        }
+        //我们设置区域就是数据库
+        public override string ShardingKeyToDataSourceName(object shardingKey)
+        {
+            return ConvertToShardingKey(shardingKey);
+        }
+
+        public override List<string> GetAllDataSourceNames()
+        {
+            return _dataSources;
+        }
+
+        public override bool AddDataSourceName(string dataSourceName)
+        {
+            if (_dataSources.Any(o => o == dataSourceName))
+                return false;
+            _dataSources.Add(dataSourceName);
+            return true;
+        }
+
+        protected override Expression<Func<string, bool>> GetRouteToFilter(string shardingKey, ShardingOperatorEnum shardingOperator)
+        {
+
+            var t = ShardingKeyToDataSourceName(shardingKey);
+            switch (shardingOperator)
+            {
+                case ShardingOperatorEnum.Equal: return tail => tail == t;
+                default:
+                {
+                    return tail => true;
+                }
+            }
         }
     }
 ```
+::: warning 注意
+因为分库提供默认路由所以需要用户自行实现`AbstractShardingOperatorVirtualDataSourceRoute`抽象
+:::
 
 ### Startup配置
 `ConfigureServices(IServiceCollection services)`配置
@@ -134,10 +197,10 @@ PM> Install-Package Microsoft.EntityFrameworkCore.SqlServer
         {
 
             services.AddControllers();
-            //添加一下代码
+            
             services.AddShardingDbContext<MyDbContext>((conStr, builder) =>
                 {
-                    builder.UseSqlServer(conStr);
+                    builder.UseSqlServer(conStr).UseLoggerFactory(efLogger);
                 }).Begin(op =>
                 {
                     op.AutoTrackEntity = true;
@@ -147,13 +210,27 @@ PM> Install-Package Microsoft.EntityFrameworkCore.SqlServer
                     op.EnsureCreatedWithOutShardingTable = true;
                 }).AddShardingTransaction((connection, builder) =>
                 {
-                    builder.UseSqlServer(connection);
-                }).AddDefaultDataSource("ds0",
-                    "Data Source=localhost;Initial Catalog=EFCoreShardingTableDB;Integrated Security=True;")
-                .AddShardingTableRoute(op =>
+                    builder.UseSqlServer(connection).UseLoggerFactory(efLogger);
+                }).AddDefaultDataSource("A",
+                    "Data Source=localhost;Initial Catalog=EFCoreShardingDataSourceDBA;Integrated Security=True;")
+                .AddShardingDataSource(sp=>
                 {
-                    op.AddShardingTableRoute<SysUserVirtualTableRoute>();
-                    op.AddShardingTableRoute<OrderVirtualTableRoute>();
+                    return new Dictionary<string, string>()
+                    {
+                        {
+                            "B",
+                            "Data Source=localhost;Initial Catalog=EFCoreShardingDataSourceDBB;Integrated Security=True;"
+                        },
+                        {
+                            "C",
+                            "Data Source=localhost;Initial Catalog=EFCoreShardingDataSourceDBC;Integrated Security=True;"
+                        },
+                    };
+                })
+                .AddShardingDataSourceRoute(op =>
+                {
+                    op.AddShardingDatabaseRoute<SysUserVirtualDataSourceRoute>();
+                    op.AddShardingDatabaseRoute<OrderVirtualDataSourceRoute>();
                 }).End();
         }
 ```
@@ -168,6 +245,7 @@ PM> Install-Package Microsoft.EntityFrameworkCore.SqlServer
 
 新建一个扩展方法用来初始化ShardingCore和初始化种子数据
 ```csharp
+   
     public static class StartupExtension
     {
         public static void UseShardingCore(this IApplicationBuilder app)
@@ -179,25 +257,9 @@ PM> Install-Package Microsoft.EntityFrameworkCore.SqlServer
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
                 var myDbContext = serviceScope.ServiceProvider.GetRequiredService<MyDbContext>();
-                if (!myDbContext.Set<Setting>().Any())
+                if (!myDbContext.Set<SysUser>().Any())
                 {
-                    List<Setting> settings = new List<Setting>(3);
-                    settings.Add(new Setting()
-                    {
-                        Code = "Admin",
-                        Name = "AdminName"
-                    });
-                    settings.Add(new Setting()
-                    {
-                        Code = "User",
-                        Name = "UserName"
-                    });
-                    settings.Add(new Setting()
-                    {
-                        Code = "SuperAdmin",
-                        Name = "SuperAdminName"
-                    });
-
+                    string[] areas = new string[] {"A","B","C" };
                     List<SysUser> users = new List<SysUser>(10);
                     for (int i = 0; i < 10; i++)
                     {
@@ -205,7 +267,7 @@ PM> Install-Package Microsoft.EntityFrameworkCore.SqlServer
                         {
                             Id = i.ToString(),
                             Name = $"MyName{i}",
-                            SettingCode = settings[i % 3].Code
+                            Area = areas[i % 3]
                         };
                         users.Add(uer);
                     }
@@ -220,11 +282,11 @@ PM> Install-Package Microsoft.EntityFrameworkCore.SqlServer
                             Payer = $"{i % 10}",
                             Money = 100+new Random().Next(100,3000),
                             OrderStatus = (OrderStatusEnum)(i % 4 + 1),
+                            Area = areas[i % 3],
                             CreationTime = begin.AddDays(i)
                         };
                         orders.Add(order);
                     }
-                    myDbContext.AddRange(settings);
                     myDbContext.AddRange(users);
                     myDbContext.AddRange(orders);
                     myDbContext.SaveChanges();
@@ -259,10 +321,6 @@ PM> Install-Package Microsoft.EntityFrameworkCore.SqlServer
 
 ### efcore日志(可选)
 这边为了方便我们观察efcore的执行sql语句我们这边建议对efcore添加日志
-
-```shell
-PM> Install-Package Microsoft.Extensions.Logging.Console
-``` 
 `Startup`添加静态数据
 ```csharp
         public static readonly ILoggerFactory efLogger = LoggerFactory.Create(builder =>
@@ -276,5 +334,4 @@ PM> Install-Package Microsoft.Extensions.Logging.Console
 
 启动后我们将可以看到数据库和表会被自动创建，并且会将种子数据进行插入到内部供我们可以查询测试
 
-## Demo
-[EFCoreShardingTable](https://github.com/xuejmnet/ShardingCoreDocDemo/tree/main/EFCoreShardingTable)
+<img src="/sharding-data-source.png">

@@ -5,7 +5,7 @@ category: 使用指南
 ---
 
 ## Demo
-本次分表的demo源码：[EFCoreShardingTable](https://github.com/xuejmnet/ShardingCoreDocDemo/tree/main/EFCoreShardingTable)
+本次分表的demo源码：[EFCoreShardingTable](https://github.com/xuejmnet/sharding-core/tree/main/samples/Sample.SqlServerShardingTable)
 
 ## 自动追踪修改
 
