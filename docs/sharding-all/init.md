@@ -1,6 +1,6 @@
 ---
 icon: overflow
-title: 分表且分库
+title: 初始化
 category: 使用指南
 ---
 

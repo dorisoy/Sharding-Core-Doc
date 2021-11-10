@@ -9,7 +9,7 @@ category: 使用指南
 ## 全局
 
 ### IEntityMetadataManager
-`IEntityMetadataManager<TShardingDbContext>`管理对象数据，将对象数据分表和分库的对象进行存储管理，可以区分对象是否分表是否分库，并且可以获取对应的对象类型原数据`EntityMetadata`
+`IEntityMetadataManager<TShardingDbContext>`管理对象数据，将对象数据分表和分库的对象进行存储管理，可以区分对象是否分表是否分库，并且可以获取对应的对象类型元数据`EntityMetadata`
 
 ```csharp
 //直接获取
@@ -18,7 +18,7 @@ ShardingContainer.GetService<IEntityMetadataManager<TShardingDbContext>>();
 (IEntityMetadataManager)ShardingContainer.GetService(typeof(IEntityMetadataManager<>).GetGenericType0(shardingDbContext.GetType()));
 ```
 ### EntityMetadata
-`EntityMetadata`对象类型原数据，是针对分表分库对象的数据解析后的存储，通过对象类型原数据可以获取到对象的类型和对应的`虚拟表名`(不带后缀的表名)，`表主键`，是否分表是否分库，包括分表he分库的对应字段属性信息
+`EntityMetadata`对象类型元数据，是针对分表分库对象的数据解析后的存储，通过对象类型元数据可以获取到对象的类型和对应的`虚拟表名`(不带后缀的表名)，`表主键`，是否分表是否分库，包括分表he分库的对应字段属性信息
 ```csharp
 //直接获取
 IEntityMetadataManager entityMetadataManager=.....;
@@ -73,7 +73,7 @@ ShardingContainer.GetService<IShardingTableCreator<TShardingDbContext>>();
 
 ### IVirtualDataSourceRoute
 
-`IVirtualDataSourceRoute`虚拟数据源路由,如果您的对象十分表对象，那么分表对象必须实现一个虚拟数据源路由`IVirtualDataSourceRoute`，
+`IVirtualDataSourceRoute`虚拟数据源路由,如果您的对象是一个分库对象，那么分库对象必须实现一个虚拟数据源路由`IVirtualDataSourceRoute`，
 虚拟数据源路由的作用是用来对分库对象进行路由，告诉框架程序应该如何对分库对象进行路由去对应的数据源里面
 ```csharp
 //首先获取IVirtualDataSource
@@ -119,7 +119,7 @@ virtualTableManager.GetVirtualTable<TEntity>()
 ```
 
 ### IVirtualTableRoute
-`IVirtualTableRoute`虚拟表路由，针对对象如果我们需要对齐进行分表，那么我么你必须要重写分表的路由，分表路由会告诉程序我们的这个sql执行是该如何找寻对应的实际表，而不用用户手动去指定对应的表，每一个虚拟表都会拥有一个虚拟表路由
+`IVirtualTableRoute`虚拟表路由，针对对象如果我们需要对其进行分表，那么我么你必须要重写分表的路由，分表路由会告诉程序我们的这个sql执行是该如何找寻对应的实际表，而不用用户手动去指定对应的表，每一个虚拟表都会拥有一个虚拟表路由
 ```csharp
 //首先获取虚拟表
 IVirtualTable virtualTable=...;
