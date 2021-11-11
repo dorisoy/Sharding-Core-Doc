@@ -86,16 +86,16 @@ module.exports = config({
           children: ["init","query","update","delete"],
         },
         {
-          title: "查询",
-          icon: "creative",
-          prefix: "query/",
-          children: ["single-entity-query","multi-entity-query","group-by-query"],
-        },
-        {
           title: "路由",
           icon: "creative",
           prefix: "sharding-route/",
           children: ["default-route","customer-route","manual-route","assert-route"],
+        },
+        {
+          title: "查询",
+          icon: "creative",
+          prefix: "query/",
+          children: ["single-entity-query","multi-entity-query","group-by-query","query-in-transaction"],
         },
         {
           title: "高级",
