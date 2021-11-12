@@ -89,7 +89,7 @@ module.exports = config({
           title: "路由",
           icon: "creative",
           prefix: "sharding-route/",
-          children: ["default-route","customer-route","manual-route","assert-route"],
+          children: ["default-route","customer-route","manual-route"],
         },
         {
           title: "查询",

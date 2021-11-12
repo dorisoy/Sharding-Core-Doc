@@ -33,3 +33,6 @@ public class SqlServerNullableGuidCSharpLanguageShardingComparer<TShardingDbCont
 如果您需要使用一下方法需要注意
 ## EnsureCreated
 `DbContext.Database.EnsureCreated()`如果您需要使用这个接口请自行实现`IMigrationsSqlGenerator`
+
+## 时间分表
+如果您是时间分表的那么请一定要阅读[高性能分页](/adv/pagination)
