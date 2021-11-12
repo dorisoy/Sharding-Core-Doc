@@ -29,7 +29,7 @@ category: 路由
 就是在原先的哈希取模的上面进行再次分段来保证不会再增加一个基数的情况下需要大范围的迁移数据，直接上代码
 
 
-```C#
+```csharp
             var stringHashCode = ShardingCoreHelper.GetStringHashCode("123");
             var hashCode = stringHashCode % 10000;
             if (hashCode >= 0 && hashCode <= 3000)
@@ -50,7 +50,7 @@ category: 路由
 
 这应该是一个最最最简单的是个人都能看得懂的路由了，将hashcode进行取模10000，得到0-9999，将其分成[0-3000],[3001-6000],[6001-9999]三段的概率大概是3、3、4相对很平均，那么还是遇到了上面我们所说的一个问题，如果我们现在需要加一个基数呢，首先修改路由
 
-```C#
+```csharp
             var stringHashCode = ShardingCoreHelper.GetStringHashCode("123");
             var hashCode = stringHashCode % 10000;
             if (hashCode >= 0 && hashCode <= 3000)
