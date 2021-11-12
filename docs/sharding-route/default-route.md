@@ -109,5 +109,52 @@ AbstractSimpleShardingModKeyStringVirtualTableRoute(3,6,'0')那么就是`000`、
 
 注意按周分表的路由自动建表需要注意的地方,框架自动建表分为两步第一步是针对数据库进行建表，第二步是为了告诉框架当前程序有哪些表
 
+1. 建表 会在每周20,21,22,23点执行建表为了防止建表出错,所以会多次执行建表 (仅数据库建表)
+2. 框架知道有表了 每周晚上23点55,56,57,58,59分执行(告诉框架目前有多少表在程序里面) 这一步基本不会出错
+
+### AbstractSimpleShardingMonthKeyDateTimeVirtualTableRoute
+该路由为简单的按月分表路由,支持分表字段是`DateTime`,分表后的后缀为`yyyyMM`.
+### AbstractSimpleShardingMonthKeyLongVirtualTableRoute
+该路由为简单的按月分表路由,支持分表字段是`long`,分表后的后缀为`yyyyMM`.
+```csharp
+
+        public override DateTime GetBeginTime()
+        {
+            //注意必须返回固定时间,不然每次启动时间都会变动
+            return new DateTime(2021, 1, 1);
+        }
+        //启动自动建表
+        public override bool StartJob()
+        {
+            return true;
+        }
+```
+
+注意按月分表的路由自动建表需要注意的地方,框架自动建表分为两步第一步是针对数据库进行建表，第二步是为了告诉框架当前程序有哪些表
+
 1. 建表 会在每天20,21,22,23点执行建表为了防止建表出错,所以会多次执行建表 (仅数据库建表)
 2. 框架知道有表了 每天晚上23点55,56,57,58,59分执行(告诉框架目前有多少表在程序里面) 这一步基本不会出错
+
+
+### AbstractSimpleShardingYearKeyDateTimeVirtualTableRoute
+该路由为简单的按年分表路由,支持分表字段是`DateTime`,分表后的后缀为`yyyy`.
+### AbstractSimpleShardingYearKeyLongVirtualTableRoute
+该路由为简单的按年分表路由,支持分表字段是`long`,分表后的后缀为`yyyy`.
+```csharp
+
+        public override DateTime GetBeginTime()
+        {
+            //注意必须返回固定时间,不然每次启动时间都会变动
+            return new DateTime(2021, 1, 1);
+        }
+        //启动自动建表
+        public override bool StartJob()
+        {
+            return true;
+        }
+```
+
+注意按年分表的路由自动建表需要注意的地方,框架自动建表分为两步第一步是针对数据库进行建表，第二步是为了告诉框架当前程序有哪些表
+
+1. 建表 会在每年20,21,22,23点执行建表为了防止建表出错,所以会多次执行建表 (仅数据库建表)
+2. 框架知道有表了 每年晚上23点55,56,57,58,59分执行(告诉框架目前有多少表在程序里面) 这一步基本不会出错

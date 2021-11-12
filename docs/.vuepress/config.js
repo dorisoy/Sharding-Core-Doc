@@ -60,7 +60,7 @@ module.exports = config({
 
     sidebar: {
       "/": [
-        "",
+        "important",
         {
           title: "指南",
           icon: "creative",
