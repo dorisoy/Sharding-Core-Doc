@@ -86,6 +86,12 @@ module.exports = config({
           children: ["init","query","update","delete"],
         },
         {
+          title: "读写分离",
+          icon: "overflow",
+          prefix: "read-write/",
+          children: ["configure"],
+        },
+        {
           title: "路由",
           icon: "creative",
           prefix: "sharding-route/",

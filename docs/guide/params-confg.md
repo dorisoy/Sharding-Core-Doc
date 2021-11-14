@@ -60,7 +60,7 @@ services.AddShardingConfigure<MyDbContext>((conn, builder) =>
 
 ## ParallelQueryMaxThreadCount
 
-并发查询最大线程数,默认cpu核心数*2，因为分表/分库后的单次查询会涉及到N张表，N>=1为了保证单次查询不会导致整个系统崩溃掉，所以这边提供了这个属性，可以保证涉及到跨库或者跨表的时候查询不会创建过多的`DbConnection`
+并发查询最大线程数,默认cpu核心数*2，因为分表/分库后的单次查询会涉及到N张表，N>=1为了保证单次查询不会导致整个系统崩溃掉，所以这边提供了这个属性，可以保证涉及到跨库或者跨表的时候查询不会创建过多的线程来执行`DbConnection`
 
 ## ParallelQueryTimeOut
 
