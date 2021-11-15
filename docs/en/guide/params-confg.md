@@ -41,7 +41,14 @@ services.AddShardingConfigure<MyDbContext>((conn, builder) =>
 
 ## EnsureCreatedWithOutShardingTable
 
-这个属性的意思很好理解就是是否需要在启动的时候创建表，这边的创建表是除了分表的对象，其他对象都会直接创建对应的表，每次启动都会执行一下，如果您是使用[code-first](/adv/code-first/)的那么这个值可以无视或者设置为false。
+这个属性的意思很好理解就是是否需要在启动的时候创建表，这边的创建表是除了分表的对象，其他对象都会直接创建对应的表，只有当数据库是空的前提下或者没有数据库的前提下会自动创建数据库和普通表，如果您是使用[code-first](/adv/code-first/)的那么这个值可以无视或者设置为false。
+::: warning 注意
+!!!**只有**当数据库是空的前提下或者没有数据库的前提下会自动创建数据库和普通表!!!
+
+!!!**只有**当数据库是空的前提下或者没有数据库的前提下会自动创建数据库和普通表!!!
+
+!!!**只有**当数据库是空的前提下或者没有数据库的前提下会自动创建数据库和普通表!!!
+:::
 
 ## CreateShardingTableOnStart
 
@@ -53,7 +60,7 @@ services.AddShardingConfigure<MyDbContext>((conn, builder) =>
 
 ## ParallelQueryMaxThreadCount
 
-并发查询最大线程数,默认cpu核心数*2，因为分表/分库后的单次查询会涉及到N张表，N>=1为了保证单次查询不会导致整个系统崩溃掉，所以这边提供了这个属性，可以保证涉及到跨库或者跨表的时候查询不会创建过多的`DbConnection`
+并发查询最大线程数,默认cpu核心数*2，因为分表/分库后的单次查询会涉及到N张表，N>=1为了保证单次查询不会导致整个系统崩溃掉，所以这边提供了这个属性，可以保证涉及到跨库或者跨表的时候查询不会创建过多的线程来执行`DbConnection`
 
 ## ParallelQueryTimeOut
 

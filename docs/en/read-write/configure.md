@@ -1,5 +1,5 @@
 ---
 icon: launch
-title: 分表并且分库
+title: 读写分离
 category: 使用指南
 ---

@@ -4,6 +4,10 @@ title: 快速上手
 category: 使用指南
 ---
 
+
+## Demo
+本次demo源码：[EFCoreSharding](https://github.com/xuejmnet/ShardingCoreDocDemo/tree/main/EFCoreSharding)
+
 ## 版本
 
 sharding-core 目前为止以efcore版本号作为主版本，所以您会在nuget上看到2.x,3.x,5.x的版本,如果需要请安装最新版nuget上的efcore版本对应的sharding-core版本
@@ -17,7 +21,7 @@ sharding-core 目前为止以efcore版本号作为主版本，所以您会在nug
 
 ```shell
 # 请对应安装您需要的版本
-PM> Install-Package ShardingCore -Version LastVersion
+PM> Install-Package ShardingCore
 ```
 
 ## 使用efcore
@@ -34,7 +38,7 @@ cd EFCoreSharding
 dotnet new console
 
 # 添加efcore 测试我们采用sqlserver作为测试数据库，其他数据库用法一致
-dotnet add package Microsoft.EntityFrameworkCore.SqlServer --version 5.0.11
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer
 ```
 
 ::: warning 注意
@@ -143,7 +147,7 @@ class Program
 
 ### 添加sharding-core包
 ```shell
-dotnet add package ShardingCore --version 5.3.1.19
+dotnet add package ShardingCore
 ```
 ::: tip 提示
   根据项目自己选择sharding-core 2.x/3.x/5.x......的最新版本.
