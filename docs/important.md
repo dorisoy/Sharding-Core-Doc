@@ -4,7 +4,7 @@ title: 重要
 category: 重要
 ---
 ## GUID
-如果您是sqlserver 并且在用guid排序那么为了和数据库guid排序一致请知悉,c#默认会将guid转成sqlguid去比较来保证和数据库一致的排序表现,但是未提供`Nullable<Guid>`的排序正确判断,如果需要可自行实现,下面是一个
+如果您是sqlserver 并且在用guid排序那么为了和数据库guid排序一致请知悉,`sharding-core`默认会将guid转成sqlguid去比较来保证和数据库一致的排序表现,但是未提供`Nullable<Guid>`的排序正确判断,如果需要可自行实现,下面是一个
 ```csharp
 /// <summary>
 /// like this example
@@ -35,4 +35,4 @@ public class SqlServerNullableGuidCSharpLanguageShardingComparer<TShardingDbCont
 `DbContext.Database.EnsureCreated()`如果您需要使用这个接口请自行实现`IMigrationsSqlGenerator`
 
 ## 时间分表
-如果您是时间分表的那么请一定要阅读[高性能分页](/adv/pagination)
+如果您是时间分表的那么请一定要阅读[高性能分页](../adv/pagination)
