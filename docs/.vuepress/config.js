@@ -3,7 +3,7 @@ const { config } = require("vuepress-theme-hope");
 module.exports = config({
   title: "ShardingCore官方文档",
   description: "ShardingCore官方文档",
-  base:'/sharding-core-doc/',
+  base:'/',
   dest: "./dist",
 
   head: [

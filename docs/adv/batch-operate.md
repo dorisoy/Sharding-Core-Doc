@@ -11,7 +11,7 @@ category: 高级
 efcore有着许许多多的批处理生态，目前我们熟知的有[`Z.EntityFramework.Plus.EFCore`](https://github.com/zzzprojects/EntityFramework-Plus)还有[`EFCore.BulkExtensions`](https://github.com/borisdj/EFCore.BulkExtensions)等等一些列的，虽然各个框架五花八门但是在支持方面`sharding-cor`e表示我都支持
 
 ## 使用
-```c#
+```csharp
 var list = new List<SysUserMod>();
             ///通过集合返回出对应的k-v归集通过事务开启
             var dbContexts = _defaultTableDbContext.BulkShardingEnumerable(list);
