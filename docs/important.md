@@ -3,8 +3,11 @@ icon: launch
 title: 重要
 category: 重要
 ---
+## GetHashCode
+c#的gethashcode并不能直接用来取模，因为c#的gethashcode会在程序启动的生命周期内同一个字符串是一样的，但是如果程序关闭后在启动那么就会和之前的hashcode不一致,所以这边建议使用`sharding-core`提供的`ShardingCoreHelper.GetStringHashCode(shardingKeyStr)`
+
 ## GUID
-如果您是sqlserver 并且在用guid排序那么为了和数据库guid排序一致请知悉,`sharding-core`默认会将guid转成sqlguid去比较来保证和数据库一致的排序表现,但是未提供`Nullable<Guid>`的排序正确判断,如果需要可自行实现,下面是一个
+如果您是sqlserver 并且在用guid排序那么为了和数据库guid排序一致请知悉,`sharding-core`默认会将guid转成sqlguid去比较来保证和数据库一致的排序表现,但是未提供`Nullable<Guid>`的排序正确判断,如果需要可自行实现,下面是一个案例
 ```csharp
 /// <summary>
 /// like this example
