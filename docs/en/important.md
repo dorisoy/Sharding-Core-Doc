@@ -4,10 +4,17 @@ title: Important
 category: Important
 ---
 ## GetHashCode
-c#的gethashcode并不能直接用来取模，因为c#的gethashcode会在程序启动的生命周期内同一个字符串是一样的，但是如果程序关闭后在启动那么就会和之前的hashcode不一致,所以这边建议使用`sharding-core`提供的`ShardingCoreHelper.GetStringHashCode(shardingKeyStr)`
+c# `GetHashCode` 
+
+When we do not modify the object, we call hashcode many times to return the same integer. In the same application, if we execute it many times, the integer returned by each execution may be inconsistent 
+suggestion use `sharding-core` provider method `ShardingCoreHelper.GetStringHashCode(shardingKeyStr)`
+
+## Group By
+
+if use `group by` queryable will append order by while order by item is empty,if has order by item shoule use full select properties
 
 ## GUID
-如果您是sqlserver 并且在用guid排序那么为了和数据库guid排序一致请知悉,`sharding-core`默认会将guid转成sqlguid去比较来保证和数据库一致的排序表现,但是未提供`Nullable<Guid>`的排序正确判断,如果需要可自行实现,下面是一个案例
+c# guid compare is difference with sqlserver uniqueidentifier，`sharding-core` is fix this bug,use SqlGuid to compare,but not fix `Nullable<Guid>` if u want fix it. example:
 ```csharp
 /// <summary>
 /// like this example
@@ -28,14 +35,13 @@ public class SqlServerNullableGuidCSharpLanguageShardingComparer<TShardingDbCont
 //configure
 .ReplaceShardingComparer(sp=>new SqlServerNullableGuidCSharpLanguageShardingComparer<DefaultShardingDbContext>())
 ```
-**注意:如果您使用的框架不是本框架,那么请确认他的分表聚合是否是内存聚合,如果是内存聚合请确保他会有正确的guid排序在数据库和内存之间**
+**注意:fix c# compare guid**
 
-## 自增Id
-如果您在efcore配置了整型为自增那么请不要对自增字段设置为sharding字段因为会导致分表数据没办法正确分表，因为自增字段只有在正确插入到数据库后才会知道具体的类型，所以不可以吧自增字段设置为分表/分库字段
+## auto increment field
+do not configure auto increment field in `sharding-core` sharding field。e.g:increment id
 
-如果您需要使用一下方法需要注意
 ## EnsureCreated
-`DbContext.Database.EnsureCreated()`如果您需要使用这个接口请自行实现`IMigrationsSqlGenerator`
+`DbContext.Database.EnsureCreated()` if u want use this method ,plz impl `IMigrationsSqlGenerator`
 
-## 时间分表
-如果您是时间分表的那么请一定要阅读[高性能分页](../adv/pagination)
+## sharding with time
+if u use sharding with time field,plz read[pagination](/en/adv/pagination)

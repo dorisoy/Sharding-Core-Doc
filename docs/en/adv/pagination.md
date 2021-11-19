@@ -1,6 +1,6 @@
 ---
 icon: launch
-title: High Performance 
+title: High Performance Page
 category: Advance
 ---
 

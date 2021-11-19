@@ -290,4 +290,4 @@ PM> Install-Package Microsoft.EntityFrameworkCore.SqlServer
 启动后我们将可以看到数据库和表会被自动创建，并且会将种子数据进行插入到内部供我们可以查询测试
 
 
-<img src="https://xuejmnet.github.io/sharding-core-doc/sharding-table.png">
+<img src="/sharding-table.png">

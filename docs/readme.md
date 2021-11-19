@@ -8,7 +8,7 @@ tagline: 🚀efcore生态下分表分库的最完美解决方案
 
 action:
   - text: 开始使用 →
-    link: /guide/introduce
+    link: /guide/introduce/
     type: primary
 
   # - text: 博客主页 🏠
@@ -40,7 +40,7 @@ postList: none
 
 ## 🔔交流QQ群
 ::: center
-<img src="join-qq-group.jpg" alt="群号: 771630778" class="no-zoom" style="width:200px;">
+<img src="/join-qq-group.jpg" alt="群号: 771630778" class="no-zoom" style="width:200px;">
 
 #### ShardingCore官方QQ群: 771630778
 :::

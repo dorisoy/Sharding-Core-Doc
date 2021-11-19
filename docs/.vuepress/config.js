@@ -27,8 +27,8 @@ module.exports = config({
   locales: {
     "/": {
       lang: "zh-CN",
-        title: "ShardingCore官方文档",
-        description: "ShardingCore官方文档",
+        title: "ShardingCore文档",
+        description: "ShardingCore文档",
     },
     "/en/": {
       lang: "en-US",
@@ -51,11 +51,11 @@ module.exports = config({
         icon: "creative",
         link: "/guide/introduce",
       },
-      // {
-      //   text: "Docs",
-      //   link: "https://vuepress-theme-hope.github.io/",
-      //   icon: "note",
-      // },
+      {
+        text: "国内镜像",
+        link: "https://xuejm.gitee.io/sharding-core-doc/",
+        icon: "note",
+      },
     ],
 
     sidebar: {
@@ -110,6 +110,7 @@ module.exports = config({
           children: ["code-first","pagination","dynamic-table","batch-operate","transaction"],
         },
         "question",
+        "abp"
       ],
     },
 
@@ -179,6 +180,7 @@ module.exports = config({
               children: ["code-first","pagination","dynamic-table","batch-operate","transaction"],
             },
             "question",
+            "abp"
           ],
         },
       },
