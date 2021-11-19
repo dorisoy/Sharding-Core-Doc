@@ -40,7 +40,7 @@ postList: none
 
 ## 🔔communication QQ group
 ::: center
-<img src="/join-qq-group.jpg" alt="group number: 771630778" class="no-zoom" style="width:200px;">
+<img src="/sharding-core-doc/join-qq-group.jpg" alt="group number: 771630778" class="no-zoom" style="width:200px;">
 
 #### ShardingCore QQ group: 771630778
 :::

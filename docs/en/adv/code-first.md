@@ -219,10 +219,10 @@ dotnet add package Microsoft.EntityFrameworkCore.Tools
 ## 生成迁移文件
 
 ### 打开nuget命令
-<img src="/nuget.png">
+<img src="/sharding-core-doc/nuget.png">
 
 ### 设置启动项
-<img src="/setm.png">
+<img src="/sharding-core-doc/setm.png">
 
 ### 迁移初始化命令
 ```shell
