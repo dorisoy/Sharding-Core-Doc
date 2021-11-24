@@ -42,6 +42,9 @@ services.AddShardingConfigure<MyDbContext>((conn, builder) =>
 ## EnsureCreatedWithOutShardingTable
 
 这个属性的意思很好理解就是是否需要在启动的时候创建表，这边的创建表是除了分表的对象，其他对象都会直接创建对应的表，只有当数据库是空的前提下或者没有数据库的前提下会自动创建数据库和普通表，如果您是使用[code-first](/adv/code-first/)的那么这个值可以无视或者设置为false。
+
+有库了不会建库，普通表(非分表的可以是分库的表但不能是分表的表)有任何一张存在库里了别的普通表都不会被创建
+
 ::: warning 注意
 !!!**只有**当数据库是空的前提下或者没有数据库的前提下会自动创建数据库和普通表!!!
 
