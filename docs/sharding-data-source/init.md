@@ -142,6 +142,10 @@ PM> Install-Package Microsoft.EntityFrameworkCore.SqlServer
                 }
             }
         }
+        public override void Configure(EntityMetadataDataSourceBuilder<Order> builder)
+        {
+            builder.ShardingProperty(o => o.Area);
+        }
     }
     public class SysUserVirtualDataSourceRoute : AbstractShardingOperatorVirtualDataSourceRoute<SysUser, string>
     {
@@ -184,6 +188,11 @@ PM> Install-Package Microsoft.EntityFrameworkCore.SqlServer
                     return tail => true;
                 }
             }
+        }
+
+        public override void Configure(EntityMetadataDataSourceBuilder<SysUser> builder)
+        {
+            builder.ShardingProperty(o => o.Area);
         }
     }
 ```
