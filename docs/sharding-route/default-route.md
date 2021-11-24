@@ -54,7 +54,7 @@ AbstractSimpleShardingModKeyStringVirtualTableRoute(3,6,'0')那么就是`000`、
             return new DateTime(2021, 1, 1);
         }
         //启动自动建表
-        public override bool StartJob()
+        public override bool AutoCreateTableByTime()
         {
             return true;
         }
@@ -80,7 +80,7 @@ AbstractSimpleShardingModKeyStringVirtualTableRoute(3,6,'0')那么就是`000`、
             return new DateTime(2021, 1, 1);
         }
         //启动自动建表
-        public override bool StartJob()
+        public override bool AutoCreateTableByTime()
         {
             return true;
         }
@@ -105,7 +105,7 @@ AbstractSimpleShardingModKeyStringVirtualTableRoute(3,6,'0')那么就是`000`、
             return new DateTime(2021, 1, 1);
         }
         //启动自动建表
-        public override bool StartJob()
+        public override bool AutoCreateTableByTime()
         {
             return true;
         }
@@ -131,7 +131,7 @@ AbstractSimpleShardingModKeyStringVirtualTableRoute(3,6,'0')那么就是`000`、
             return new DateTime(2021, 1, 1);
         }
         //启动自动建表
-        public override bool StartJob()
+        public override bool AutoCreateTableByTime()
         {
             return true;
         }
