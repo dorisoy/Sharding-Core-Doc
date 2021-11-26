@@ -4,7 +4,7 @@ icon: home
 title: 项目主页
 heroImage: /logo.svg
 heroText: ShardingCore
-tagline: 🚀efcore生态下分表分库的最完美解决方案
+tagline: 🚀 three 'zero' lib for efcore,best solution for efcore sharding problem
 
 action:
   - text: 开始使用 →
@@ -15,12 +15,12 @@ action:
   #   link: /zh/
 
 features: # 可选的
-  - title: 高性能分表分库
-    details: 客户端分表分库组件，拥有媲美原生efcore的性能和最佳的分表分库数据聚合解决方案
+  - title: 零依赖
+    details: 框架本身仅依赖efcore和efcore.relational其他所有方法都自行编写完全可控100%开源
   - title: 零学习成本
     details: 以DbContext为核心进行数据扩展，让开发者在配置完成后几乎零学习成本使用，完美的happy coding
-  - title: 自定义路由
-    details: 专门为各种分表分库数据存储提供路由解决方案，支持90%的业务场景分表分库规则，提供多个默认分表分库路由
+  - title: 零业务代码入侵
+    details: 正真做到配置即实现，用户可以做到100%的业务代码无需修改即可实现分片和读写功能
 
 # 文章列表显示方式: detailed 默认，显示详细版文章列表（包括作者、分类、标签、摘要、分页等）| simple => 显示简约版文章列表（仅标题和日期）| none 不显示文章列表
 postList: none

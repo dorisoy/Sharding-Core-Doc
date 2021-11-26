@@ -4,7 +4,7 @@ icon: home
 title: Project Home
 heroImage: /logo.svg
 heroText: ShardingCore
-tagline: 🚀best solution for efcore sharding,support read write separation、high performance pagination
+tagline: 🚀three 'zero' lib for efcore,best solution for efcore sharding problem
 
 action:
   - text: Get Started →
@@ -15,12 +15,13 @@ action:
   #   link: /zh/
 
 features: # 可选的
-  - title: high performance 
-    details: high performance sharding for efcore,best solution for efcore
+  - title: zero dependency 
+    details: dependency only  efcore and efcore.relational 100% open source
   - title: zero learning cost
     details: learning cost,using sharding-core like use efcore
-  - title: customer route
-    details: customer route for any business logic
+  - title: zero incursion
+    details: zero incursion business code
+
 
 # 文章列表显示方式: detailed 默认，显示详细版文章列表（包括作者、分类、标签、摘要、分页等）| simple => 显示简约版文章列表（仅标题和日期）| none 不显示文章列表
 postList: none
