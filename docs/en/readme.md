@@ -4,7 +4,7 @@ icon: home
 title: Project Home
 heroImage: /logo.svg
 heroText: ShardingCore
-tagline: 🚀three 'zero' lib for efcore,best solution for efcore sharding problem
+tagline: 🚀high performance lightweight solution for efcore sharding table and sharding database support read-write-separation
 
 action:
   - text: Get Started →
@@ -16,7 +16,7 @@ action:
 
 features: # 可选的
   - title: zero dependency 
-    details: dependency only  efcore and efcore.relational 100% open source
+    details: dependency only  [efcore] and [efcore.relational] 100% open source
   - title: zero learning cost
     details: learning cost,using sharding-core like use efcore
   - title: zero incursion
@@ -39,11 +39,11 @@ postList: none
 </p>
 
 
-## 🔔communication QQ group
+## 🔔Communication QQ Group
 ::: center
 <img src="/sharding-core-doc/join-qq-group.jpg" alt="group number: 771630778" class="no-zoom" style="width:200px;">
 
-#### ShardingCore QQ group: 771630778
+#### ShardingCore QQ Group: 771630778
 :::
 
 
@@ -51,3 +51,7 @@ postList: none
 
 ## License
 [Apache-2.0 License](https://github.com/xuejmnet/sharding-core/blob/main/LICENSE)
+
+
+## Document Theme
+[vuepress-theme-hope](https://vuepress-theme-hope.github.io/)

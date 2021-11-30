@@ -4,7 +4,7 @@ icon: home
 title: 项目主页
 heroImage: /logo.svg
 heroText: ShardingCore
-tagline: 🚀 three 'zero' lib for efcore,best solution for efcore sharding problem
+tagline: 🚀 一款efcore下高性能、轻量级针对分表分库读写分离的解决方案，具有零依赖、零学习成本、零业务代码入侵.
 
 action:
   - text: 开始使用 →
@@ -16,7 +16,7 @@ action:
 
 features: # 可选的
   - title: 零依赖
-    details: 框架本身仅依赖efcore和efcore.relational其他所有方法都自行编写完全可控100%开源
+    details: 框架本身仅依赖[efcore]和[efcore.relational]其他所有方法都自行编写完全可控100%开源
   - title: 零学习成本
     details: 以DbContext为核心进行数据扩展，让开发者在配置完成后几乎零学习成本使用，完美的happy coding
   - title: 零业务代码入侵
@@ -50,3 +50,7 @@ postList: none
 
 ## 许可证
 [Apache-2.0 License](https://github.com/xuejmnet/sharding-core/blob/main/LICENSE)
+
+
+## 文档主题
+[vuepress-theme-hope](https://vuepress-theme-hope.github.io/)

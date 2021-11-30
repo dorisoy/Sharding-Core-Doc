@@ -110,7 +110,8 @@ module.exports = config({
           children: ["code-first","pagination","dynamic-table","batch-operate","transaction"],
         },
         "question",
-        "abp"
+        "abp",
+        "unit-test-coverage"
       ],
     },
 
@@ -118,9 +119,14 @@ module.exports = config({
       "/en/": {
         nav: [
           {
-            text: "使用指南",
+            text: "Guide",
             icon: "creative",
             link: "/zh/guide/introduce",
+          },
+          {
+            text: "Domestic Image",
+            link: "https://xuejm.gitee.io/sharding-core-doc/",
+            icon: "note",
           },
           // {
           //   text: "项目指南",
@@ -180,7 +186,8 @@ module.exports = config({
               children: ["code-first","pagination","dynamic-table","batch-operate","transaction"],
             },
             "question",
-            "abp"
+            "abp",
+            "unit-test-coverage"
           ],
         },
       },
