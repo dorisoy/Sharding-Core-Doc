@@ -65,7 +65,7 @@ module.exports = config({
           title: "指南",
           icon: "creative",
           prefix: "guide/",
-          children: ["introduce","terminology","quick-start","params-confg","auto-track", "read-write"],
+          children: ["introduce","terminology","quick-start","params-confg","auto-track"],
         },
         {
           title: "分表",
@@ -141,7 +141,7 @@ module.exports = config({
               title: "Guide",
               icon: "creative",
               prefix: "guide/",
-              children: ["introduce","terminology","quick-start","params-confg","auto-track", "read-write"],
+              children: ["introduce","terminology","quick-start","params-confg","auto-track"],
             },
             {
               title: "ShardingTable",

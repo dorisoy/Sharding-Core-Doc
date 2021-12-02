@@ -187,7 +187,7 @@ public class OrderVirtualTableRoute:AbstractSimpleShardingModKeyStringVirtualTab
 
 
 
-### 接口特性配置
+### 接口特性配置（不推荐）
 除了路由配置您还可以使用接口和特性来实现
 
 1. 让订单`Order`继承`IShardingTable`
@@ -233,7 +233,7 @@ public class OrderVirtualTableRoute:AbstractSimpleShardingModKeyStringVirtualTab
 
 ::: tip 提示
   1. `ShardingTableKey`特性表示对应的属性是需要被分表的字段,如：`Order`对象通过`Id`属性来进行分表
-  2. 按接口+特性分表我们发现虚拟路由里面将不需要配置对应的方法`Configure`
+  2. 按接口+特性分表我们发现虚拟路由里面将不需要配置对应的方法`Configure`,这边建议使用配置而不是接口+特性，因为使用配置可以有效的避免污染`entities`层，否则因为需要使用接口和特性在对象所在层必须引入`ShardingCore`
   3. 推荐使用第一种路由处配置对应的分表信息
 :::
 
@@ -306,7 +306,7 @@ class Program
         {
             var myDbContext = scope.ServiceProvider.GetService<MyDbContext>();
             //如果不存在就创建数据库和对应的数据库表
-            //myDbContext.Database.EnsureCreated();//注释掉不然会创建虚拟表，虚拟表其实没什么用
+            //myDbContext.Database.EnsureCreated();//注释掉不然会创建虚拟表，虚拟表其实没什么用,如果需要使用必须重写迁移
 
             var now = new DateTime(2021,1,1);
             var orders = Enumerable.Range(0,10).Select((o,i)=>new Order()

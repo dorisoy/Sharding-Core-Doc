@@ -37,6 +37,20 @@ public class SqlServerNullableGuidCSharpLanguageShardingComparer<TShardingDbCont
 ## 自增Id
 如果您在efcore配置了整型为自增那么请不要对自增字段设置为sharding字段因为会导致分表数据没办法正确分表，因为自增字段只有在正确插入到数据库后才会知道具体的类型，所以不可以吧自增字段设置为分表/分库字段
 
+## 性能优化
+如果您对程序的性能有要求建议您针对每个路由开启表达式缓存，并且自行实现多表判断表达式缓存，系统默认会在你启用路由表达式缓存后针对单个表达式比较进行缓存提高10倍编译性能
+
+```csharp
+
+    public class SysUserSalaryVirtualTableRoute:AbstractShardingOperatorVirtualTableRoute<SysUserSalary,int>
+    {
+        //开启路由表达式缓存
+        public override bool EnableRouteParseCompileCache => true;
+
+        //.....
+    }
+```
+
 如果您需要使用一下方法需要注意
 ## EnsureCreated
 `DbContext.Database.EnsureCreated()`如果您需要使用这个接口请自行实现`IMigrationsSqlGenerator`
