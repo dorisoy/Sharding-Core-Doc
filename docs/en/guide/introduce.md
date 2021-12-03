@@ -5,7 +5,7 @@ category: Guide
 ---
 
 ## Important
-this is very Important if u first use [Important](/en/important)
+this is very Important if u first use [Important](/sharding-core-doc/en/important)
 ::: danger
 ！！！Important,Important,Important！！！
 

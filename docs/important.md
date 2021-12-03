@@ -40,7 +40,7 @@ public class SqlServerNullableGuidCSharpLanguageShardingComparer<TShardingDbCont
 ## 性能优化
 如果您对程序的性能有要求建议您针对每个路由开启表达式缓存，并且自行实现多表判断表达式缓存，系统默认会在你启用路由表达式缓存后针对单个表达式比较进行缓存提高10倍编译性能
 
-```csharp
+```csharps
 
     public class SysUserSalaryVirtualTableRoute:AbstractShardingOperatorVirtualTableRoute<SysUserSalary,int>
     {
@@ -50,6 +50,15 @@ public class SqlServerNullableGuidCSharpLanguageShardingComparer<TShardingDbCont
         //.....
     }
 ```
+
+
+::: danger
+！！！如果开启表达式缓存,请确认返回的表达式为固定值的比较比如tail，而不是每次都是不一样的表达式，不然会导致创建过多表达式从而导致性能问题具体参考[路由表达式缓存](/sharding-core-doc/adv/route-parse-compile-cache/)。
+
+！！！如果开启表达式缓存,请确认返回的表达式为固定值的比较比如tail，而不是每次都是不一样的表达式，不然会导致创建过多表达式从而导致性能问题具体参考[路由表达式缓存](/sharding-core-doc/adv/route-parse-compile-cache/)。
+
+！！！如果开启表达式缓存,请确认返回的表达式为固定值的比较比如tail，而不是每次都是不一样的表达式，不然会导致创建过多表达式从而导致性能问题具体参考[路由表达式缓存](/sharding-core-doc/adv/route-parse-compile-cache/)。
+:::
 
 如果您需要使用一下方法需要注意
 ## EnsureCreated

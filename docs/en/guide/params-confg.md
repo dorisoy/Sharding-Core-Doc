@@ -52,11 +52,11 @@ services.AddShardingConfigure<MyDbContext>((conn, builder) =>
 
 ## CreateShardingTableOnStart
 
-这个熟悉的意思就是是否需要在启动的时候创建表，但是由于`efcore`并未提供关于表是否存在的判断，所以如果你将这个值设置为true,那么每次都会在启动的时候都会去执行创建表的方法，这样就会导致启动的时候如果有某些表过多那么就会导致启动速度变慢，可以再您未创建表的时候使用这个属性，创建完成后将这个属性设置为false，如果您是使用[code-first](/adv/code-first/)的那么这个值可以无视或者设置为false。
+这个熟悉的意思就是是否需要在启动的时候创建表，但是由于`efcore`并未提供关于表是否存在的判断，所以如果你将这个值设置为true,那么每次都会在启动的时候都会去执行创建表的方法，这样就会导致启动的时候如果有某些表过多那么就会导致启动速度变慢，可以再您未创建表的时候使用这个属性，创建完成后将这个属性设置为false，如果您是使用[code-first](/sharding-core-doc/sharding-core-doc/adv/code-first/)的那么这个值可以无视或者设置为false。
 
 ## IgnoreCreateTableError
 
-`sharding-core`默认会在创建表失败后输出错误信息,但是输出的信息会被log记录所以为了log不记录这些信息，可以将这个值设置为true那么如果创建失败(已经存在表)框架将不会抛出对应的错误消息，如果您是使用[code-first](/adv/code-first/)的那么这个值可以无视或者设置为false。
+`sharding-core`默认会在创建表失败后输出错误信息,但是输出的信息会被log记录所以为了log不记录这些信息，可以将这个值设置为true那么如果创建失败(已经存在表)框架将不会抛出对应的错误消息，如果您是使用[code-first](/sharding-core-doc/adv/code-first/)的那么这个值可以无视或者设置为false。
 
 ## ParallelQueryMaxThreadCount
 

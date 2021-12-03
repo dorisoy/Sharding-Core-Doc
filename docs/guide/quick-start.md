@@ -182,7 +182,7 @@ public class OrderVirtualTableRoute:AbstractSimpleShardingModKeyStringVirtualTab
   1. `ShardingProperty`必须指定,表示具体按什么字段进行分表
   2. `AutoCreateTable`可选,表示是否需要在**启动**的时候建表:null表示根据全局配置,true:表示需要,false:表示不需要,默认null
   3. `TableSeparator`可选,表示分表后缀和虚拟表名之间的分隔连接符,默认`_`
-  4. `AbstractSimpleShardingModKeyStringVirtualTableRoute<Order>`由sharding-core提供的默认取模分表规则,其中2代表分表后尾巴有两位,3表示按3取模所以后缀为:00,01,02。因为最多2位所以可以最多到99,如果需要了解更多路由[默认路由](/pages/defaultroute)
+  4. `AbstractSimpleShardingModKeyStringVirtualTableRoute<Order>`由sharding-core提供的默认取模分表规则,其中2代表分表后尾巴有两位,3表示按3取模所以后缀为:00,01,02。因为最多2位所以可以最多到99,如果需要了解更多路由[默认路由](/sharding-core-doc/pages/defaultroute)
 :::
 
 

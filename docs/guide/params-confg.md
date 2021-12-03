@@ -41,7 +41,7 @@ services.AddShardingConfigure<MyDbContext>((conn, builder) =>
 
 ## EnsureCreatedWithOutShardingTable
 
-这个属性的意思很好理解就是是否需要在启动的时候创建表，这边的创建表是除了分表的对象，其他对象都会直接创建对应的表，只有当数据库是空的前提下或者没有数据库的前提下会自动创建数据库和普通表，如果您是使用[code-first](/adv/code-first/)的那么这个值可以无视或者设置为false。
+这个属性的意思很好理解就是是否需要在启动的时候创建表，这边的创建表是除了分表的对象，其他对象都会直接创建对应的表，只有当数据库是空的前提下或者没有数据库的前提下会自动创建数据库和普通表，如果您是使用[code-first](/sharding-core-doc/adv/code-first/)的那么这个值可以无视或者设置为false。
 
 有库了不会建库，普通表(非分表的可以是分库的表但不能是分表的表)有任何一张存在库里了别的普通表都不会被创建
 
@@ -55,11 +55,11 @@ services.AddShardingConfigure<MyDbContext>((conn, builder) =>
 
 ## CreateShardingTableOnStart
 
-这个属性的意思就是是否需要在启动的时候创建分表了的表，但是由于`efcore`并未提供关于表是否存在的判断，所以如果你将这个值设置为true,那么每次都会在启动的时候都会去执行创建表的方法，这样就会导致启动的时候如果有某些表过多那么就会导致启动速度变慢，可以再您未创建表的时候使用这个属性，创建完成后将这个属性设置为false，如果您是使用[code-first](/adv/code-first/)的那么这个值可以无视或者设置为false。
+这个属性的意思就是是否需要在启动的时候创建分表了的表，但是由于`efcore`并未提供关于表是否存在的判断，所以如果你将这个值设置为true,那么每次都会在启动的时候都会去执行创建表的方法，这样就会导致启动的时候如果有某些表过多那么就会导致启动速度变慢，可以再您未创建表的时候使用这个属性，创建完成后将这个属性设置为false，如果您是使用[code-first](/sharding-core-doc/adv/code-first/)的那么这个值可以无视或者设置为false。
 
 ## IgnoreCreateTableError
 
-`sharding-core`默认会在创建表失败后输出错误信息,但是输出的信息会被log记录所以为了log不记录这些信息，可以将这个值设置为true那么如果创建失败(已经存在表)框架将不会抛出对应的错误消息，如果您是使用[code-first](/adv/code-first/)的那么这个值可以无视或者设置为false。
+`sharding-core`默认会在创建表失败后输出错误信息,但是输出的信息会被log记录所以为了log不记录这些信息，可以将这个值设置为true那么如果创建失败(已经存在表)框架将不会抛出对应的错误消息，如果您是使用[code-first](/sharding-core-doc/adv/code-first/)的那么这个值可以无视或者设置为false。
 
 ## ParallelQueryMaxThreadCount
 

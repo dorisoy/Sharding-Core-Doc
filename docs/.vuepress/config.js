@@ -107,11 +107,12 @@ module.exports = config({
           title: "高级",
           icon: "creative",
           prefix: "adv/",
-          children: ["code-first","pagination","dynamic-table","batch-operate","transaction"],
+          children: ["code-first","pagination","dynamic-table","batch-operate","transaction","route-parse-compile-cache"],
         },
         "question",
         "abp",
-        "unit-test-coverage"
+        "unit-test-coverage",
+        "benchmark"
       ],
     },
 
@@ -183,11 +184,12 @@ module.exports = config({
               title: "Advance",
               icon: "creative",
               prefix: "adv/",
-              children: ["code-first","pagination","dynamic-table","batch-operate","transaction"],
+              children: ["code-first","pagination","dynamic-table","batch-operate","transaction","route-parse-compile-cache"],
             },
             "question",
             "abp",
-            "unit-test-coverage"
+            "unit-test-coverage",
+            "benchmark"
           ],
         },
       },

@@ -44,4 +44,4 @@ do not configure auto increment field in `sharding-core` sharding field。e.g:in
 `DbContext.Database.EnsureCreated()` if u want use this method ,plz impl `IMigrationsSqlGenerator`
 
 ## sharding with time
-if u use sharding with time field,plz read[pagination](/en/adv/pagination)
+if u use sharding with time field,plz read[pagination](/sharding-core-doc/en/adv/pagination)
