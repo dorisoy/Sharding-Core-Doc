@@ -3,8 +3,18 @@ icon: launch
 title: 重要
 category: 重要
 ---
+
+## 前言
+`sharding-core`主旨是增加efcore，针对efcore的分片方面进行增强，并且不对efcore的业务代码进行侵入。不解决数据库层面的问题，编写复杂sql如果在sql层面是慢的那么`sharding-core`也是无能为力的.
+
+## 损耗
+`sharding-core`目前单次查询开开启表达式编译的情况下损耗在`0.2ms`-`0.3ms`左右,这是不可避免的因为单次查询需要经过路由和表达式解析两步,框架已经目前尽力在优化这个损耗了,相比其他框架的肉眼可见的毫秒我觉得`sharding-core`做的哪怕不是最好也是很不错的了,尤其是在800w左右的数据测试下的mysql在不进行所以的查询下可以有5倍性能的提示在使用分表，分了5张表的情况下完全可以忽略这个`0.2毫秒`
+
+## 缺点
+本库的缺点是比较消耗链接，针对dbconnection的消耗比一般的链接要高，但是可以通过启动时候配置`MaxQueryConnectionsLimit`字段来限制单次查询的dbconnection的消耗，从而可以让用户可以进行控制连接数
+
 ## GetHashCode
-c#的gethashcode并不能直接用来取模，因为c#的gethashcode会在程序启动的生命周期内同一个字符串是一样的，但是如果程序关闭后在启动那么就会和之前的hashcode不一致,所以这边建议使用`sharding-core`提供的`ShardingCoreHelper.GetStringHashCode(shardingKeyStr)`
+c#的gethashcode并不能直接用来取模，因为c#的`GetHashCode`会在程序启动的生命周期内同一个字符串是一样的，但是如果程序关闭后在启动那么就会和之前的hashcode不一致,所以这边建议使用`sharding-core`提供的`ShardingCoreHelper.GetStringHashCode(shardingKeyStr)`
 
 ## Group By
 

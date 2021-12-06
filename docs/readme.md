@@ -8,7 +8,7 @@ tagline: 🚀 一款efcore下高性能、轻量级针对分表分库读写分离
 
 action:
   - text: 开始使用 →
-    link: /guide/introduce/
+    link: /guide/important/
     type: primary
 
   # - text: 博客主页 🏠

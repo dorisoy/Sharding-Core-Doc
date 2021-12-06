@@ -61,10 +61,38 @@ services.AddShardingConfigure<MyDbContext>((conn, builder) =>
 
 `sharding-core`默认会在创建表失败后输出错误信息,但是输出的信息会被log记录所以为了log不记录这些信息，可以将这个值设置为true那么如果创建失败(已经存在表)框架将不会抛出对应的错误消息，如果您是使用[code-first](/sharding-core-doc/adv/code-first/)的那么这个值可以无视或者设置为false。
 
-## ParallelQueryMaxThreadCount
+## MaxQueryConnectionsLimit
 
-并发查询最大线程数,默认cpu核心数*2，因为分表/分库后的单次查询会涉及到N张表，N>=1为了保证单次查询不会导致整个系统崩溃掉，所以这边提供了这个属性，可以保证涉及到跨库或者跨表的时候查询不会创建过多的线程来执行`DbConnection`
+最大并发链接数，就是表示单次查询`sharding-core`允许使用的dbconnection，默认会加上1就是说如果你配置了`MaxQueryConnectionsLimit=10`那么实际`sharding-core`会在同一次查询中开启11条链接最多,为什么是11不是10因为`sharding-core`会默认开启一个链接用来进行空dbconnection的使用。如果不设置本参数那么默认是cpu线程数`Environment.ProcessorCount`
 
-## ParallelQueryTimeOut
+## ConnectionMode
+链接模式,可以由用户自行指定，使用内存限制,和连接数限制或者系统自行选择最优
 
-并发查询超时时间,默认30秒,这个字段也是为了在分成多个线程查询后可能导致线程一致未返回结果，所以添加了这个字段在超时后可以取消掉现有的线程,防止无限制等待。
+链接模式，有三个可选项，分别是：
+### MEMORY_STRICTLY
+内存限制模式最小化内存聚合 流式聚合 同时会有多个链接
+
+MEMORY_STRICTLY的意思是最小化内存使用率，就是非一次性获取所有数据然后采用流式聚合
+
+### CONNECTION_STRICTLY
+连接数限制模式最小化并发连接数 内存聚合 连接数会有限制
+
+CONNECTION_STRICTLY的意思是最小化连接并发数，就是单次查询并发连接数为设置的连接数`MaxQueryConnectionsLimit`。因为有限制，所以无法一直挂起多个连接，数据的合并为内存聚合采用最小化内存方式进行优化，而不是无脑使用内存聚合
+
+
+### SYSTEM_AUTO
+系统自动选择内存还是流式聚合
+
+系统自行选择会根据用户的配置采取最小化连接数，但是如果遇到分页则会根据分页策略采取内存限制，因为skip过大会导致内存爆炸
+
+
+### UseMemoryLimitWhileSkip
+当表达式使用分页查询的时候如果跳过的页数过多,并且设置的最大连接数过小会导致系统采用`CONNECTION_STRICTLY`也就是内存排序,但是内存排序涉及到会将所有的skip+take取到内存中,所以这边设置了这个参数，当`skip>UseMemoryLimitWhileSkip`时,框架会无视之前的`MaxQueryConnectionsLimit`配置直接才用`MEMORY_STRICTLY`防止程序内存爆炸但是会导致链接数增加,所以具体请自行考虑如何设置这个值,默认为10000,就是说skip(10000).take(1)后将启用流式聚合`MEMORY_STRICTLY`
+
+
+
+::: warning 注意
+!!!如果用户手动设置ConnectionMode则按照用户设置的为准,之后判断本次查询skip是否大于UseMemoryLimitWhileSkip,如果是采用`MEMORY_STRICTLY`,之后才是系统动态设置根据`MaxQueryConnectionsLimit`来分配!!!
+!!!如果用户手动设置ConnectionMode则按照用户设置的为准,之后判断本次查询skip是否大于UseMemoryLimitWhileSkip,如果是采用`MEMORY_STRICTLY`,之后才是系统动态设置根据`MaxQueryConnectionsLimit`来分配!!!
+!!!如果用户手动设置ConnectionMode则按照用户设置的为准,之后判断本次查询skip是否大于UseMemoryLimitWhileSkip,如果是采用`MEMORY_STRICTLY`,之后才是系统动态设置根据`MaxQueryConnectionsLimit`来分配!!!
+:::

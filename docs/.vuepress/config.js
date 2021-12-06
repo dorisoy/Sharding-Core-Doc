@@ -107,7 +107,7 @@ module.exports = config({
           title: "高级",
           icon: "creative",
           prefix: "adv/",
-          children: ["code-first","pagination","dynamic-table","batch-operate","transaction","route-parse-compile-cache"],
+          children: ["code-first","pagination","dynamic-table","dynamic-data-source","batch-operate","transaction","route-parse-compile-cache","connection-mode"],
         },
         "question",
         "abp",
