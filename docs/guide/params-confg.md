@@ -84,10 +84,10 @@ CONNECTION_STRICTLY的意思是最小化连接并发数，就是单次查询并�
 系统自动选择内存还是流式聚合
 
 系统自行选择会根据用户的配置采取最小化连接数，但是如果遇到分页则会根据分页策略采取内存限制，因为skip过大会导致内存爆炸
-
+<!-- 
 
 ### UseMemoryLimitWhileSkip
-当表达式使用分页查询的时候如果跳过的页数过多,并且设置的最大连接数过小会导致系统采用`CONNECTION_STRICTLY`也就是内存排序,但是内存排序涉及到会将所有的skip+take取到内存中,所以这边设置了这个参数，当`skip>UseMemoryLimitWhileSkip`时,框架会无视之前的`MaxQueryConnectionsLimit`配置直接才用`MEMORY_STRICTLY`防止程序内存爆炸但是会导致链接数增加,所以具体请自行考虑如何设置这个值,默认为10000,就是说skip(10000).take(1)后将启用流式聚合`MEMORY_STRICTLY`
+当表达式使用分页查询的时候如果跳过的页数过多,并且设置的最大连接数过小会导致系统采用`CONNECTION_STRICTLY`也就是内存排序,但是内存排序涉及到会将所有的skip+take取到内存中,所以这边设置了这个参数，当`skip>UseMemoryLimitWhileSkip`时,框架会无视之前的`MaxQueryConnectionsLimit`配置直接才用`MEMORY_STRICTLY`防止程序内存爆炸但是会导致链接数增加,所以具体请自行考虑如何设置这个值,默认为10000,就是说skip(10000).take(1)后将启用流式聚合`MEMORY_STRICTLY` -->
 
 
 
