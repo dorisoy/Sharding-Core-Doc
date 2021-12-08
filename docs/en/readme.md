@@ -8,7 +8,7 @@ tagline: 🚀high performance lightweight solution for efcore sharding table and
 
 action:
   - text: Get Started →
-    link: /en/guide/important/
+    link: /en/important/
     type: primary
 
   # - text: 博客主页 🏠
