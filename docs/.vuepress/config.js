@@ -80,7 +80,7 @@ module.exports = config({
           children: ["init","query","update","delete"],
         },
         {
-          title: "分库且分库",
+          title: "分表且分库",
           icon: "overflow",
           prefix: "sharding-all/",
           children: ["init","query","update","delete"],
