@@ -63,7 +63,7 @@ CONNECTION_STRICTLY的意思是最小化连接并发数，就是单次查询并�
 这边极力推荐大家在不清楚应该用什么模式的时候使用`SYSTEM_AUTO`并且手动配置`MaxQueryConnectionsLimit`来确定各个环境下的配置一直而不是采用默认的cpu线程数。
 
 首先我们通过每个数据库被路由到了多少张表进行计算期望用户在配置了xx后应该的并行数来进行分组,sqlCount :表示这个数据库被路由到的表数目，exceptCount :表示计算出来的应该的单次查询并行数
-```c#
+```csharp
 //代码本质就是向上取整
     int exceptCount =
                 Math.Max(
@@ -72,7 +72,7 @@ CONNECTION_STRICTLY的意思是最小化连接并发数，就是单次查询并�
                         : sqlCount / maxQueryConnectionsLimit + 1, 1);
 ```
 第二次我们通过判断`sqlCount`和`maxQueryConnectionsLimit`的大小来确定链接模式的选择
-```c#
+```csharp
 
         private ConnectionModeEnum CalcConnectionMode(int sqlCount)
         {

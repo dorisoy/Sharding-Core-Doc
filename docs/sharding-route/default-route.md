@@ -65,7 +65,7 @@ AbstractSimpleShardingModKeyStringVirtualTableRoute(3,6,'0')那么就是`000`、
 2. 每天的00:00:00分,"0 0 0 * * ?"
 3. 每天的00:01:00分,"0 1 0 * * ?"
 
-分别会在这三个时间节点进行表的创建和数据表的动态添加,通过时间往后拨5分钟来创建对应的表tail
+分别会在这三个时间节点进行表的创建和数据表的动态添加,通过时间往后拨`IncrementMinutes`分钟来创建对应的表tail
 
 ### AbstractSimpleShardingWeekKeyDateTimeVirtualTableRoute
 该路由为简单的按周分表路由,支持分表字段是`DateTime`,分表后的后缀为`yyyyMMdd_dd`.
@@ -91,7 +91,7 @@ AbstractSimpleShardingModKeyStringVirtualTableRoute(3,6,'0')那么就是`000`、
 2. 每次周一的00:00:00分,"0 0 0 ? * 2"
 3. 每次周一的00:01:00分,"0 1 0 ? * 2"
 
-分别会在这三个时间节点进行表的创建和数据表的动态添加,通过时间往后拨5分钟来创建对应的表tail
+分别会在这三个时间节点进行表的创建和数据表的动态添加,通过时间往后拨`IncrementMinutes`分钟来创建对应的表tail
 
 ### AbstractSimpleShardingMonthKeyDateTimeVirtualTableRoute
 该路由为简单的按月分表路由,支持分表字段是`DateTime`,分表后的后缀为`yyyyMM`.
@@ -117,7 +117,7 @@ AbstractSimpleShardingModKeyStringVirtualTableRoute(3,6,'0')那么就是`000`、
 2. 每月的1日的00:00:00分,"0 0 0 1 * ?"
 3. 每月的1日的00:01:00分,"0 1 0 1 * ?"
 
-分别会在这三个时间节点进行表的创建和数据表的动态添加,通过时间往后拨5分钟来创建对应的表tail
+分别会在这三个时间节点进行表的创建和数据表的动态添加,通过时间往后拨`IncrementMinutes`分钟来创建对应的表tail
 
 ### AbstractSimpleShardingYearKeyDateTimeVirtualTableRoute
 该路由为简单的按年分表路由,支持分表字段是`DateTime`,分表后的后缀为`yyyy`.
@@ -142,7 +142,7 @@ AbstractSimpleShardingModKeyStringVirtualTableRoute(3,6,'0')那么就是`000`、
 2. 每年的1日的00:00:00分,"0 0 0 1 1 ?"
 3. 每年的1日的00:01:00分,"0 1 0 1 1 ?"
 
-分别会在这三个时间节点进行表的创建和数据表的动态添加,通过时间往后拨5分钟来创建对应的表tail
+分别会在这三个时间节点进行表的创建和数据表的动态添加,通过时间往后拨`IncrementMinutes`分钟来创建对应的表tail
 
 **注意：所有的定时任务都可以设置为false,并且可以使用自身的定时任务来实现动态的创建表和添加表后缀**
 
@@ -150,3 +150,12 @@ AbstractSimpleShardingModKeyStringVirtualTableRoute(3,6,'0')那么就是`000`、
 
 为了保证可以让程序卡点发布还能正确创建对应的表信息和知道现有的表,所以存在三个节点进行创建表。
 但是可能会出现重复创建表的信息，也会出现表没创建的其他原因导致程序执行失败，所以这边对其进行了日志的过滤用户可以再使用默认的时间分表的情况下选择重写`ShowErrorLog`属性来输出任务执行时候的建表异常信息。
+
+
+::: danger 注意
+！！！重写`GetCronExpressions()`方法后,请一定要重写`IncrementMinutes`值！！！
+
+！！！重写`GetCronExpressions()`方法后,请一定要重写`IncrementMinutes`值！！！
+
+！！！重写`GetCronExpressions()`方法后,请一定要重写`IncrementMinutes`值！！！
+:::
