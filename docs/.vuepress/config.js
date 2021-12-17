@@ -65,7 +65,7 @@ module.exports = config({
           title: "指南",
           icon: "creative",
           prefix: "guide/",
-          children: ["introduce","terminology","quick-start","params-confg","auto-track"],
+          children: ["introduce","terminology","quick-start","quick-start-old-bird","params-confg","auto-track"],
         },
         {
           title: "分表",
