@@ -9,7 +9,7 @@ category: 高级
 
 ## 原理
 我们现在假定一个很简单的场景,依然是订单时间按月分片,查询进行如下语句
-```c#
+```csharp
           //这边演示不使用雪花id因为雪花id很难在演示中展示所以使用订单编号进行演示格式:yyyyMMddHHmmss+new Random().Next(0,10000).ToString().PadLeft(4,'0')
             var dateTime = new DateTime(2021, 11, 1);
             var order = await _myDbContext.Set<Order>().Where(o => o.OrderNo== 202112201900001111&&o.CreateTime< dateTime).FirstOrDefaultAsync();
@@ -34,7 +34,7 @@ Install-Package Microsoft.EntityFrameworkCore.SqlServer -Version 6.0.1
 
 
 ### 创建一个订单对象
-```c#
+```csharp
 
     public class Order
     {
@@ -46,7 +46,7 @@ Install-Package Microsoft.EntityFrameworkCore.SqlServer -Version 6.0.1
 ```
 ### 创建DbContext
 这边就简单的创建了一个dbcontext,并且设置了一下order如何映射到数据库,当然你可以采用attribute的方式而不是一定要fluentapi
-```c#
+```csharp
 
     /// <summary>
     /// 如果需要支持分表必须要实现<see cref="IShardingTableDbContext"/>
@@ -75,7 +75,7 @@ Install-Package Microsoft.EntityFrameworkCore.SqlServer -Version 6.0.1
 
 ### 创建分片路由
 这边我们采用订单创建时间按月分表
-```c#
+```csharp
 
     public class OrderVirtualRoute : AbstractSimpleShardingMonthKeyDateTimeVirtualTableRoute<Order>
     {
@@ -140,14 +140,14 @@ Install-Package Microsoft.EntityFrameworkCore.SqlServer -Version 6.0.1
             //当前时间的tail
             var currentTail = TimeFormatToTail(orderTime);
             //因为是按月分表所以获取下个月的时间判断id是否是在临界点创建的
-            var nextMonthFirstDay = ShardingCoreHelper.GetNextMonthFirstDay(DateTime.Now);
+            var nextMonthFirstDay = ShardingCoreHelper.GetNextMonthFirstDay(orderTime);
             if (orderTime.AddSeconds(10) > nextMonthFirstDay)
             {
                 var nextTail = TimeFormatToTail(nextMonthFirstDay);
                 return DoOrderNoFilter(shardingOperator, orderTime, currentTail, nextTail);
             }
             //因为是按月分表所以获取这个月月初的时间判断id是否是在临界点创建的
-            if (orderTime.AddSeconds(-10) < ShardingCoreHelper.GetCurrentMonthFirstDay(DateTime.Now))
+            if (orderTime.AddSeconds(-10) < ShardingCoreHelper.GetCurrentMonthFirstDay(orderTime))
             {
                 //上个月tail
                 var previewTail = TimeFormatToTail(orderTime.AddSeconds(-10));
@@ -217,7 +217,7 @@ Install-Package Microsoft.EntityFrameworkCore.SqlServer -Version 6.0.1
     }
 ```
 这边我来讲解一下为什么用额外字段分片需要些这么多代码呢,其实是这样的因为你是用订单创建时间`CreateTime`来进行分片的那么`CreateTime`和`OrderNo`的赋值原理上说应该在系统里面是不可能实现同一时间赋值的肯定有先后关系可能是几微妙甚至几飞秒,但是为了消除这种差异这边采用了临界点兼容算法来实现，让我们来看下一下代码
-```c#
+```csharp
 var order=new Order()
 //执行这边生成出来的id是2021-11-30 23:59:59.999.999
 order.Id="xxx";
@@ -228,7 +228,7 @@ order.CreateTime=DateTime.Now;
 ```
 当然系统里面采用了前后添加10秒是一个比较保守的估算你可以采用前后一秒甚至几百毫秒都是ok的,具体业务具体实现,因为大部分的创建时间可能是由框架在提交后才会生成而不是new Order的时候,当然也不排除这种情况,当然如果你只需要考虑equal一种情况可以只编写equal的判断而不需要全部情况都考虑
 ### ShardingCore启动配置
-```c#
+```csharp
 ILoggerFactory efLogger = LoggerFactory.Create(builder =>
 {
     builder.AddFilter((category, level) => category == DbLoggerCategory.Database.Command.Name && level == LogLevel.Information).AddConsole();
@@ -302,7 +302,7 @@ app.Run();
 
 ## 测试
 ### 默认配置下的测试
-```c#
+```csharp
 
         public async Task<IActionResult> Test1()
         { Console.WriteLine("--------------Query Name Begin--------------");
@@ -337,7 +337,7 @@ app.Run();
 测试结果非常完美除了无法匹配路由的时候那么我们该如何设置呢
 
 ### 测试无路由返回默认值
-```c#
+```csharp
 builder.Services.AddShardingDbContext<DefaultDbContext>(...)
     .Begin(o =>
     {

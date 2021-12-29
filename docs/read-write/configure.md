@@ -1,7 +1,7 @@
 ---
 icon: launch
 title: 读写分离
-category: 使用指南
+category: 读写分离
 ---
 
 ## 介绍

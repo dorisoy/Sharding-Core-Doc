@@ -83,7 +83,7 @@ public class MultiShardingOrderVirtualTableRoute:AbstractSimpleShardingMonthKeyD
             //当前时间的tail
             var t = TimeFormatToTail(analyzeIdToDateTime);
             //因为是按月分表所以获取下个月的时间判断id是否是在灵界点创建的
-            var nextMonthFirstDay = ShardingCoreHelper.GetNextMonthFirstDay(DateTime.Now);
+            var nextMonthFirstDay = ShardingCoreHelper.GetNextMonthFirstDay(analyzeIdToDateTime);
             if (analyzeIdToDateTime.AddSeconds(10) > nextMonthFirstDay)
             {
                 var nextT = TimeFormatToTail(nextMonthFirstDay);
@@ -93,7 +93,7 @@ public class MultiShardingOrderVirtualTableRoute:AbstractSimpleShardingMonthKeyD
                     return tail => tail == t||tail== nextT;
                 }
             }
-            var currentMonthFirstDay = ShardingCoreHelper.GetCurrentMonthFirstDay(DateTime.Now);
+            var currentMonthFirstDay = ShardingCoreHelper.GetCurrentMonthFirstDay(analyzeIdToDateTime);
             if (analyzeIdToDateTime.AddSeconds(-10) < currentMonthFirstDay)
             {
                 //上个月tail
