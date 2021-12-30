@@ -60,6 +60,12 @@ module.exports = config({
 
     sidebar: {
       "/": [
+        {
+          title: "开发者文档",
+          icon: "creative",
+          prefix: "deveploer/",
+          children: ["architecture","execute-process","query-notes"],
+        },
         "important",
         {
           title: "指南",
@@ -112,7 +118,8 @@ module.exports = config({
         "question",
         "abp",
         "unit-test-coverage",
-        "benchmark"
+        "benchmark",
+        "query-notes"
       ],
     },
 

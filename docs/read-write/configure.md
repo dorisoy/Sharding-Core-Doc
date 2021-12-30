@@ -67,5 +67,5 @@ category: 读写分离
 #### ReadConnStringGetStrategyEnum.LatestFirstTime
 表示针对同一个dbcontext只取一次从库链接，保证同一个dbcontext下的从库链接都是一样的，不会出现说查询主表数据存在但是第二次查询可能走的是其他从库导致明细表不存在等问题，所以建议大部分情况下使用LatestFirstTime
 
-#### ReadConnStringGetStrategyEnum.LatestFirstTime
+#### ReadConnStringGetStrategyEnum.LatestEveryTime
 表示每一次查询都是获取一次从库，但是可能会出现比如page的两次操作count+list结果和实际获取的不一致等情况，大部分情况下不会出现问题只是有可能会出现这种情况
