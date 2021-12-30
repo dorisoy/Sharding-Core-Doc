@@ -22,7 +22,8 @@ var order =await _myDbContext.Set<Order>().Where(o=>o.Id== 232398109278351360).F
 ### 查询对象存在分片和为分片
 将交由sharding-core查询聚合且返回对象如果是DbContext的model的对象类型那么将会进行手动track
 
-
+### 未跟踪查询
+如果你是未跟踪查询那么除了sharding对象的include不要使用,其他基本上无需考虑
 
 ::: warning
 ！！！如果查询对象是sharding对象那么请不要进行include操作,包括主表未分片子表分片。
