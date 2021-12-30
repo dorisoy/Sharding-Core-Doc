@@ -22,6 +22,9 @@ category: 重要
 ## 为什么不用union或者union all
 虽然union(all)在单表分表下面性能很好,但是再多表join下面生成的sql将是不可控的，性能和索引将是一个大大的问题因为涉及到分表的多表不一定索引一直因为可能会出现数据偏向问题建立不同的所以结构导致索引失效不好优化、并且不支持分库等一系列问题
 
+### 查询为读写分离不支持追踪
+如果本次查询是读写分离走的读链接那么将不再支持追踪哪怕没有分片
+
 ## GetHashCode
 c#的gethashcode并不能直接用来取模，因为c#的`GetHashCode`会在程序启动的生命周期内同一个字符串是一样的，但是如果程序关闭后在启动那么就会和之前的hashcode不一致,所以这边建议使用`sharding-core`提供的`ShardingCoreHelper.GetStringHashCode(shardingKeyStr)`
 
