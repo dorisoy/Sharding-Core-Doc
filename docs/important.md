@@ -8,10 +8,16 @@ category: 重要
 `sharding-core`主旨是增加efcore，针对efcore的分片方面进行增强，并且不对efcore的业务代码进行侵入。不解决数据库层面的问题，编写复杂sql如果在sql层面是慢的那么`sharding-core`也是无能为力的.
 
 ## 损耗
-`sharding-core`目前单次查询开开启表达式编译的情况下损耗在`0.2ms`-`0.3ms`左右,这是不可避免的因为单次查询需要经过路由和表达式解析两步,框架已经目前尽力在优化这个损耗了,相比其他框架的肉眼可见的毫秒我觉得`sharding-core`做的哪怕不是最好也是很不错的了,尤其是在800w左右的数据测试下的mysql在不进行所以的查询下可以有5倍性能的提示在使用分表，分了5张表的情况下完全可以忽略这个`0.2毫秒`
+1.未分片对象查询,`ShardingCore`在针对未分片对象的查询上面进行了优化,单次的查询仅`0.005ms`损耗,性能为原生efcore的97%;
+2.分片对象和原生efcore对象查询，在主键查询的情况下也就是只考虑`ShardingCore`损耗的情况下为单次`0.06ms`-`0.08ms`左右
+
+当数据为瓶颈时分片后可以提高的性能是线性提升的,在数据库未成为读取数据库瓶颈时,整个查询两者差距不大
 
 ## 缺点
-本库的缺点是比较消耗链接，针对dbconnection的消耗比一般的链接要高，但是可以通过启动时候配置`MaxQueryConnectionsLimit`字段来限制单次查询的dbconnection的消耗，从而可以让用户可以进行控制连接数
+- 本库的缺点是比较消耗链接，针对dbconnection的消耗比一般的链接要高，但是可以通过启动时候配置`MaxQueryConnectionsLimit`字段来限制单次查询的dbconnection的消耗，从而可以让用户可以进行控制连接数.
+- 目前不支持分表对象的include,(除非你是平行表也就是后缀一样的分片对象)
+- 三方批处理对象需要获取真实dbcontext后才可以支持
+- 因为不支持include所以没必要给sharding对象进行导航属性设置(不支持导航属性)
 
 ## GetHashCode
 c#的gethashcode并不能直接用来取模，因为c#的`GetHashCode`会在程序启动的生命周期内同一个字符串是一样的，但是如果程序关闭后在启动那么就会和之前的hashcode不一致,所以这边建议使用`sharding-core`提供的`ShardingCoreHelper.GetStringHashCode(shardingKeyStr)`
@@ -55,7 +61,7 @@ public class SqlServerNullableGuidCSharpLanguageShardingComparer<TShardingDbCont
     public class SysUserSalaryVirtualTableRoute:AbstractShardingOperatorVirtualTableRoute<SysUserSalary,int>
     {
         //开启路由表达式缓存
-        public override bool EnableRouteParseCompileCache => true;
+        public override bool? EnableRouteParseCompileCache => true;
 
         //.....
     }
