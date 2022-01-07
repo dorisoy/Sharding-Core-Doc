@@ -286,7 +286,6 @@ class Program
                 builder.UseSqlServer(conn);
             }).Begin(o =>
             {
-                o.AutoTrackEntity = true;
                 o.CreateShardingTableOnStart = true;
                 o.EnsureCreatedWithOutShardingTable = true;
             }).AddShardingTransaction((connection, builder) =>

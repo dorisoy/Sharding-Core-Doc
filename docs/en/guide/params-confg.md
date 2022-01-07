@@ -15,7 +15,6 @@ services.AddShardingConfigure<MyDbContext>((conn, builder) =>
                     builder.UseSqlServer(conn);
                 }).Begin(o =>
                 {
-                    o.AutoTrackEntity = true;
                 })
 ```
 那么所有的对象都将支持追踪。
@@ -28,7 +27,6 @@ services.AddShardingConfigure<MyDbContext>((conn, builder) =>
                         o.UseSqlServer(conn).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
                 ).Begin(o =>
                 {
-                    o.AutoTrackEntity = true;
                 })
                 .AddShardingTransaction((connection, builder) =>
                     builder.UseSqlServer(connection).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking))

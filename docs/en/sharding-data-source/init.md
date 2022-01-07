@@ -204,7 +204,6 @@ PM> Install-Package Microsoft.EntityFrameworkCore.SqlServer
                     builder.UseSqlServer(conStr).UseLoggerFactory(efLogger);
                 }).Begin(op =>
                 {
-                    op.AutoTrackEntity = true;
                     //如果您使用code-first建议选择false
                     op.CreateShardingTableOnStart = true;
                     //如果您使用code-first建议修改为fsle

@@ -130,27 +130,27 @@ public class OrderVirtualTableRoute:AbstractSimpleShardingModKeyStringVirtualTab
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddShardingDbContext<MyDbContext>((conStr, builder) =>
+            //额外添加分片配置
+            services.AddShardingConfigure<MyDbContext>()
+                .AddEntityConfig(op =>
                 {
-                    //don't modify conStr, params should use delegate input params
-                    builder.UseSqlServer(conStr);
-                }).Begin(op =>
-                {
-                    op.AutoTrackEntity = true;
-                    //if use code-first should false
                     op.CreateShardingTableOnStart = true;
-                    //if use code-first should false
                     op.EnsureCreatedWithOutShardingTable = true;
-                }).AddShardingTransaction((connection, builder) =>
-                {
-                    //don't modify connection, params should use delegate input params
-                    builder.UseSqlServer(connection);
-                }).AddDefaultDataSource("ds0",
-                    "Data Source=localhost;Initial Catalog=EFCoreShardingTableDB;Integrated Security=True;")
-                .AddShardingTableRoute(op =>
-                {
+                    op.UseShardingQuery((conn, builder) =>
+                    {
+                        builder.UseSqlServer(conn);
+                    });
+                    op.UseShardingTransaction((conn, builder) =>
+                    {
+                        builder.UseSqlServer(conn);
+                    });
                     op.AddShardingTableRoute<OrderVirtualTableRoute>();
-                }).End();
+                }).AddConfig(op =>
+                {
+                    op.ConfigId = "c1";
+                    op.AddDefaultDataSource(Guid.NewGuid().ToString("n"),
+                        "Data Source=localhost;Initial Catalog=EFCoreShardingTableDB;Integrated Security=True;");
+                }).EnsureConfig();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -185,18 +185,11 @@ public class ValuesController : Controller
         }
 }
 ```
-::: danger
-！！！如果您使用第二种配置,那么请对`services.AddDbContext<MyDbContext>()`配置内部使用的数据库连接字符串和后续的`AddDefaultDataSource`中添加的字符串一致不然会导致无法使用事务。
-
-！！！如果您使用第二种配置,那么请对`services.AddDbContext<MyDbContext>()`配置内部使用的数据库连接字符串和后续的`AddDefaultDataSource`中添加的字符串一致不然会导致无法使用事务。
-
-！！！如果您使用第二种配置,那么请对`services.AddDbContext<MyDbContext>()`配置内部使用的数据库连接字符串和后续的`AddDefaultDataSource`中添加的字符串一致不然会导致无法使用事务。
-:::
 
 ::: tip 提示
   1. 如果程序无法启动请确保一下几点，确认是否已经注入原生的efcore的DbContext,并且在原生的后续对DbContextOptions进行了`UseSharding<MyDbContext>()`配置
   2. 是否配置了额外分片`AddShardingConfigure`(第一种配置可以忽略)，是否创建了通过字符串委托和链接委托
   3. default data source 的连接字符串是否和默认dbcontext创建的一致
-  4. 是否添加了分表路由`AddShardingTableRoute(op =>{op.AddShardingTableRoute<OrderVirtualTableRoute>();})`
+  4. 是否添加了分表路由`op.AddShardingTableRoute<OrderVirtualTableRoute>();`
   5. 是否启动了分表启动器`buildServiceProvider.GetRequiredService<IShardingBootstrapper>().Start();`
 :::

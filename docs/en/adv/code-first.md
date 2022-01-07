@@ -186,7 +186,6 @@ dotnet add package Microsoft.EntityFrameworkCore.Tools
                 {
                     o.CreateShardingTableOnStart = false;
                     o.EnsureCreatedWithOutShardingTable = false;
-                    o.AutoTrackEntity = true;
                 })
                 .AddShardingTransaction((connection, builder) =>
                     builder.UseSqlServer(connection))

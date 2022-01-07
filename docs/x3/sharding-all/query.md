@@ -1,0 +1,391 @@
+---
+icon: overflow
+title: 查询
+category: 使用指南
+---
+
+
+## Demo
+本次分库的demo源码：[SqlServerShardingAll](https://github.com/xuejmnet/sharding-core/tree/main/samples/Sample.SqlServerShardingAll)
+
+## 单对象简单查询
+
+对`SysUser`和`Order`进行查询
+```csharp
+public async Task<IActionResult> Query()
+        {
+            var sysUser =await _myDbContext.Set<SysUser>().Where(o=>o.Id=="1").FirstOrDefaultAsync();
+            var sysUserA1 =await _myDbContext.Set<SysUser>().Where(o=>o.Id=="1"&&o.Area=="A").FirstOrDefaultAsync();
+            var dateTime = new DateTime(2021,3,5);
+            var order = await _myDbContext.Set<Order>().Where(o=>o.CreationTime>= dateTime).OrderBy(o=>o.CreationTime).FirstOrDefaultAsync();
+            var orderIdOne = await _myDbContext.Set<Order>().FirstOrDefaultAsync(o => o.Id == "3");
+
+
+            var sysUsers = await _myDbContext.Set<SysUser>().Where(o => o.Id == "1" || o.Id=="6").ToListAsync();
+
+            return Ok(new object[]
+            {
+                sysUser,
+                order,
+                orderIdOne,
+                sysUsers
+            });
+        }
+```
+结果
+```json
+[{"id":"1","name":"MyName1","area":"C"},{"id":"63","payer":"63","money":1292,"area":"C","orderStatus":4,"creationTime":"2021-03-05T03:03:03"},{"id":"3","payer":"3","money":2975,"area":"B","orderStatus":4,"creationTime":"2021-01-04T03:03:03"},[{"id":"1","name":"MyName1","area":"C"},{"id":"6","name":"MyName6","area":"A"}]]
+```
+```shell
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[Area], [s].[Name]
+      FROM [SysUser_01] AS [s]
+      WHERE [s].[Id] = '1'
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[Area], [s].[Name]
+      FROM [SysUser_01] AS [s]
+      WHERE [s].[Id] = '1'
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[Area], [s].[Name]
+      FROM [SysUser_01] AS [s]
+      WHERE [s].[Id] = '1'、
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT TOP(1) [s].[Id], [s].[Area], [s].[Name]
+      FROM [SysUser_01] AS [s]
+      WHERE ([s].[Id] = '1') AND ([s].[Area] = 'A')    
+      ......
+```
+因为查询脚本是在太多了部分没用到索引所以会全库+全表，这边就用第一个查询来进行分析,具体你可以通过demo例子进行处理,首先我们先确定下我们是按`Area`区域进行分库的，所以在没有这个字段的时候可以明确知道程序会查询3个数据库,会打开三个链接，虽然是三个链接但是每个链接因为分表关键字Id可以索引所以只会查询每个库的自身的表，
+
+第二个查询结果可以很明显看到有了分库索引后只选择其中一个库而不是所有的库,并且因为加了分表索引，所以只会有一个表而不是所有的表
+
+## join
+
+
+### 分库join分库
+1. 无索引
+```csharp
+        public async Task<IActionResult> QueryJoin()
+        {
+           var begin = new DateTime(2021, 3, 2);
+           var end = new DateTime(2021, 5, 9);
+           var sql1 = from user in _myDbContext.Set<SysUser>().Where(o => o.Id == "1" || o.Id == "6")
+               join order in _myDbContext.Set<Order>().Where(o=>o.CreationTime>=begin&&o.CreationTime<=end)
+                   on user.Id equals order.Payer
+               select new
+               {
+                   user.Id,
+                   user.Name,
+                   user.Area,
+                   OrderId = order.Id,
+                   order.Payer,
+                   order.CreationTime
+               };
+            return Ok(await sql1.ToListAsync());
+        }
+```
+结果
+```json
+[{"id":"1","name":"MyName1","area":"C","orderId":"101","payer":"1","creationTime":"2021-04-12T03:03:03"},{"id":"6","name":"MyName6","area":"A","orderId":"106","payer":"6","creationTime":"2021-04-17T03:03:03"}]
+```
+```shell
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (17ms) [Parameters=[@__begin_0='?' (DbType = DateTime2), @__end_1='?' (DbType = DateTime2)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Name], [s].[Area], [t].[Id] AS [OrderId], [t].[Payer], [t].[CreationTime]
+      FROM [SysUser_00] AS [s]
+      INNER JOIN (
+          SELECT [o].[Id], [o].[CreationTime], [o].[Payer]
+          FROM [Order_202103] AS [o]
+          WHERE ([o].[CreationTime] >= @__begin_0) AND ([o].[CreationTime] <= @__end_1)
+      ) AS [t] ON [s].[Id] = [t].[Payer]
+      WHERE [s].[Id] IN ('1', '6')
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (110ms) [Parameters=[@__begin_0='?' (DbType = DateTime2), @__end_1='?' (DbType = DateTime2)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Name], [s].[Area], [t].[Id] AS [OrderId], [t].[Payer], [t].[CreationTime]
+      FROM [SysUser_00] AS [s]
+      INNER JOIN (
+          SELECT [o].[Id], [o].[CreationTime], [o].[Payer]
+          FROM [Order_202104] AS [o]
+          WHERE ([o].[CreationTime] >= @__begin_0) AND ([o].[CreationTime] <= @__end_1)
+      ) AS [t] ON [s].[Id] = [t].[Payer]
+      WHERE [s].[Id] IN ('1', '6')
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (110ms) [Parameters=[@__begin_0='?' (DbType = DateTime2), @__end_1='?' (DbType = DateTime2)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Name], [s].[Area], [t].[Id] AS [OrderId], [t].[Payer], [t].[CreationTime]
+      FROM [SysUser_00] AS [s]
+      INNER JOIN (
+          SELECT [o].[Id], [o].[CreationTime], [o].[Payer]
+          FROM [Order_202105] AS [o]
+          WHERE ([o].[CreationTime] >= @__begin_0) AND ([o].[CreationTime] <= @__end_1)
+      ) AS [t] ON [s].[Id] = [t].[Payer]
+      WHERE [s].[Id] IN ('1', '6')
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (110ms) [Parameters=[@__begin_0='?' (DbType = DateTime2), @__end_1='?' (DbType = DateTime2)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Name], [s].[Area], [t].[Id] AS [OrderId], [t].[Payer], [t].[CreationTime]
+      FROM [SysUser_00] AS [s]
+      INNER JOIN (
+          SELECT [o].[Id], [o].[CreationTime], [o].[Payer]
+          FROM [Order_202103] AS [o]
+          WHERE ([o].[CreationTime] >= @__begin_0) AND ([o].[CreationTime] <= @__end_1)
+      ) AS [t] ON [s].[Id] = [t].[Payer]
+      WHERE [s].[Id] IN ('1', '6')
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (24ms) [Parameters=[@__begin_0='?' (DbType = DateTime2), @__end_1='?' (DbType = DateTime2)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Name], [s].[Area], [t].[Id] AS [OrderId], [t].[Payer], [t].[CreationTime]
+      FROM [SysUser_01] AS [s]
+      INNER JOIN (
+          SELECT [o].[Id], [o].[CreationTime], [o].[Payer]
+          FROM [Order_202103] AS [o]
+          WHERE ([o].[CreationTime] >= @__begin_0) AND ([o].[CreationTime] <= @__end_1)
+      ) AS [t] ON [s].[Id] = [t].[Payer]
+      WHERE [s].[Id] IN ('1', '6')
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (21ms) [Parameters=[@__begin_0='?' (DbType = DateTime2), @__end_1='?' (DbType = DateTime2)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Name], [s].[Area], [t].[Id] AS [OrderId], [t].[Payer], [t].[CreationTime]
+      FROM [SysUser_00] AS [s]
+      INNER JOIN (
+          SELECT [o].[Id], [o].[CreationTime], [o].[Payer]
+          FROM [Order_202105] AS [o]
+          WHERE ([o].[CreationTime] >= @__begin_0) AND ([o].[CreationTime] <= @__end_1)
+      ) AS [t] ON [s].[Id] = [t].[Payer]
+      WHERE [s].[Id] IN ('1', '6')
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (110ms) [Parameters=[@__begin_0='?' (DbType = DateTime2), @__end_1='?' (DbType = DateTime2)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Name], [s].[Area], [t].[Id] AS [OrderId], [t].[Payer], [t].[CreationTime]
+      FROM [SysUser_01] AS [s]
+      INNER JOIN (
+          SELECT [o].[Id], [o].[CreationTime], [o].[Payer]
+          FROM [Order_202103] AS [o]
+          WHERE ([o].[CreationTime] >= @__begin_0) AND ([o].[CreationTime] <= @__end_1)
+      ) AS [t] ON [s].[Id] = [t].[Payer]
+      WHERE [s].[Id] IN ('1', '6')
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (110ms) [Parameters=[@__begin_0='?' (DbType = DateTime2), @__end_1='?' (DbType = DateTime2)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Name], [s].[Area], [t].[Id] AS [OrderId], [t].[Payer], [t].[CreationTime]
+      FROM [SysUser_00] AS [s]
+      INNER JOIN (
+          SELECT [o].[Id], [o].[CreationTime], [o].[Payer]
+          FROM [Order_202104] AS [o]
+          WHERE ([o].[CreationTime] >= @__begin_0) AND ([o].[CreationTime] <= @__end_1)
+      ) AS [t] ON [s].[Id] = [t].[Payer]
+      WHERE [s].[Id] IN ('1', '6')
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (110ms) [Parameters=[@__begin_0='?' (DbType = DateTime2), @__end_1='?' (DbType = DateTime2)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Name], [s].[Area], [t].[Id] AS [OrderId], [t].[Payer], [t].[CreationTime]
+      FROM [SysUser_01] AS [s]
+      INNER JOIN (
+          SELECT [o].[Id], [o].[CreationTime], [o].[Payer]
+          FROM [Order_202105] AS [o]
+          WHERE ([o].[CreationTime] >= @__begin_0) AND ([o].[CreationTime] <= @__end_1)
+      ) AS [t] ON [s].[Id] = [t].[Payer]
+      WHERE [s].[Id] IN ('1', '6')
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (22ms) [Parameters=[@__begin_0='?' (DbType = DateTime2), @__end_1='?' (DbType = DateTime2)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Name], [s].[Area], [t].[Id] AS [OrderId], [t].[Payer], [t].[CreationTime]
+      FROM [SysUser_01] AS [s]
+      INNER JOIN (
+          SELECT [o].[Id], [o].[CreationTime], [o].[Payer]
+          FROM [Order_202105] AS [o]
+          WHERE ([o].[CreationTime] >= @__begin_0) AND ([o].[CreationTime] <= @__end_1)
+      ) AS [t] ON [s].[Id] = [t].[Payer]
+      WHERE [s].[Id] IN ('1', '6')
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (16ms) [Parameters=[@__begin_0='?' (DbType = DateTime2), @__end_1='?' (DbType = DateTime2)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Name], [s].[Area], [t].[Id] AS [OrderId], [t].[Payer], [t].[CreationTime]
+      FROM [SysUser_01] AS [s]
+      INNER JOIN (
+          SELECT [o].[Id], [o].[CreationTime], [o].[Payer]
+          FROM [Order_202104] AS [o]
+          WHERE ([o].[CreationTime] >= @__begin_0) AND ([o].[CreationTime] <= @__end_1)
+      ) AS [t] ON [s].[Id] = [t].[Payer]
+      WHERE [s].[Id] IN ('1', '6')
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (110ms) [Parameters=[@__begin_0='?' (DbType = DateTime2), @__end_1='?' (DbType = DateTime2)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Name], [s].[Area], [t].[Id] AS [OrderId], [t].[Payer], [t].[CreationTime]
+      FROM [SysUser_01] AS [s]
+      INNER JOIN (
+          SELECT [o].[Id], [o].[CreationTime], [o].[Payer]
+          FROM [Order_202105] AS [o]
+          WHERE ([o].[CreationTime] >= @__begin_0) AND ([o].[CreationTime] <= @__end_1)
+      ) AS [t] ON [s].[Id] = [t].[Payer]
+      WHERE [s].[Id] IN ('1', '6')
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (110ms) [Parameters=[@__begin_0='?' (DbType = DateTime2), @__end_1='?' (DbType = DateTime2)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Name], [s].[Area], [t].[Id] AS [OrderId], [t].[Payer], [t].[CreationTime]
+      FROM [SysUser_00] AS [s]
+      INNER JOIN (
+          SELECT [o].[Id], [o].[CreationTime], [o].[Payer]
+          FROM [Order_202104] AS [o]
+          WHERE ([o].[CreationTime] >= @__begin_0) AND ([o].[CreationTime] <= @__end_1)
+      ) AS [t] ON [s].[Id] = [t].[Payer]
+      WHERE [s].[Id] IN ('1', '6')
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (17ms) [Parameters=[@__begin_0='?' (DbType = DateTime2), @__end_1='?' (DbType = DateTime2)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Name], [s].[Area], [t].[Id] AS [OrderId], [t].[Payer], [t].[CreationTime]
+      FROM [SysUser_01] AS [s]
+      INNER JOIN (
+          SELECT [o].[Id], [o].[CreationTime], [o].[Payer]
+          FROM [Order_202104] AS [o]
+          WHERE ([o].[CreationTime] >= @__begin_0) AND ([o].[CreationTime] <= @__end_1)
+      ) AS [t] ON [s].[Id] = [t].[Payer]
+      WHERE [s].[Id] IN ('1', '6')
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (17ms) [Parameters=[@__begin_0='?' (DbType = DateTime2), @__end_1='?' (DbType = DateTime2)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Name], [s].[Area], [t].[Id] AS [OrderId], [t].[Payer], [t].[CreationTime]
+      FROM [SysUser_00] AS [s]
+      INNER JOIN (
+          SELECT [o].[Id], [o].[CreationTime], [o].[Payer]
+          FROM [Order_202103] AS [o]
+          WHERE ([o].[CreationTime] >= @__begin_0) AND ([o].[CreationTime] <= @__end_1)
+      ) AS [t] ON [s].[Id] = [t].[Payer]
+      WHERE [s].[Id] IN ('1', '6')
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (61ms) [Parameters=[@__begin_0='?' (DbType = DateTime2), @__end_1='?' (DbType = DateTime2)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Name], [s].[Area], [t].[Id] AS [OrderId], [t].[Payer], [t].[CreationTime]
+      FROM [SysUser_00] AS [s]
+      INNER JOIN (
+          SELECT [o].[Id], [o].[CreationTime], [o].[Payer]
+          FROM [Order_202105] AS [o]
+          WHERE ([o].[CreationTime] >= @__begin_0) AND ([o].[CreationTime] <= @__end_1)
+      ) AS [t] ON [s].[Id] = [t].[Payer]
+      WHERE [s].[Id] IN ('1', '6')
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (110ms) [Parameters=[@__begin_0='?' (DbType = DateTime2), @__end_1='?' (DbType = DateTime2)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Name], [s].[Area], [t].[Id] AS [OrderId], [t].[Payer], [t].[CreationTime]
+      FROM [SysUser_01] AS [s]
+      INNER JOIN (
+          SELECT [o].[Id], [o].[CreationTime], [o].[Payer]
+          FROM [Order_202103] AS [o]
+          WHERE ([o].[CreationTime] >= @__begin_0) AND ([o].[CreationTime] <= @__end_1)
+      ) AS [t] ON [s].[Id] = [t].[Payer]
+      WHERE [s].[Id] IN ('1', '6')
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (64ms) [Parameters=[@__begin_0='?' (DbType = DateTime2), @__end_1='?' (DbType = DateTime2)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Name], [s].[Area], [t].[Id] AS [OrderId], [t].[Payer], [t].[CreationTime]
+      FROM [SysUser_01] AS [s]
+      INNER JOIN (
+          SELECT [o].[Id], [o].[CreationTime], [o].[Payer]
+          FROM [Order_202104] AS [o]
+          WHERE ([o].[CreationTime] >= @__begin_0) AND ([o].[CreationTime] <= @__end_1)
+      ) AS [t] ON [s].[Id] = [t].[Payer]
+      WHERE [s].[Id] IN ('1', '6')
+```
+一共开了18个链接,无法索引数据库3个,月份3,4,5月3张表,userid 1或者 6两张表一共是3*3*2=18个链接,因为是并行的而且使用完成后马上释放所以性能还是很高的
+
+2. 有索引`Area`就是索引
+```csharp
+
+        public async Task<IActionResult> QueryJoin2()
+        {
+            var begin = new DateTime(2021, 3, 2);
+            var end = new DateTime(2021, 4, 3);
+            var sql1 = from user in _myDbContext.Set<SysUser>().Where(o => (o.Id == "1" || o.Id == "6")&&o.Area=="A")
+                join order in _myDbContext.Set<Order>().Where(o => o.CreationTime >= begin && o.CreationTime <= end)
+                    on user.Id equals order.Payer
+                select new
+                {
+                    user.Id,
+                    user.Name,
+                    user.Area,
+                    OrderId = order.Id,
+                    order.Payer,
+                    order.CreationTime
+                };
+            return Ok(await sql1.ToListAsync());
+        }
+```
+```json
+[{"id":"6","name":"MyName6","area":"A","orderId":"106","payer":"6","creationTime":"2021-04-17T03:03:03"}]
+```
+```shell
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (51ms) [Parameters=[@__begin_0='?' (DbType = DateTime2), @__end_1='?' (DbType = DateTime2)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Name], [s].[Area], [t].[Id] AS [OrderId], [t].[Payer], [t].[CreationTime]
+      FROM [SysUser_01] AS [s]
+      INNER JOIN (
+          SELECT [o].[Id], [o].[CreationTime], [o].[Payer]
+          FROM [Order_202105] AS [o]
+          WHERE ([o].[CreationTime] >= @__begin_0) AND ([o].[CreationTime] <= @__end_1)
+      ) AS [t] ON [s].[Id] = [t].[Payer]
+      WHERE [s].[Id] IN ('1', '6') AND ([s].[Area] = 'A')
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (12ms) [Parameters=[@__begin_0='?' (DbType = DateTime2), @__end_1='?' (DbType = DateTime2)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Name], [s].[Area], [t].[Id] AS [OrderId], [t].[Payer], [t].[CreationTime]
+      FROM [SysUser_00] AS [s]
+      INNER JOIN (
+          SELECT [o].[Id], [o].[CreationTime], [o].[Payer]
+          FROM [Order_202105] AS [o]
+          WHERE ([o].[CreationTime] >= @__begin_0) AND ([o].[CreationTime] <= @__end_1)
+      ) AS [t] ON [s].[Id] = [t].[Payer]
+      WHERE [s].[Id] IN ('1', '6') AND ([s].[Area] = 'A')
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (18ms) [Parameters=[@__begin_0='?' (DbType = DateTime2), @__end_1='?' (DbType = DateTime2)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Name], [s].[Area], [t].[Id] AS [OrderId], [t].[Payer], [t].[CreationTime]
+      FROM [SysUser_01] AS [s]
+      INNER JOIN (
+          SELECT [o].[Id], [o].[CreationTime], [o].[Payer]
+          FROM [Order_202103] AS [o]
+          WHERE ([o].[CreationTime] >= @__begin_0) AND ([o].[CreationTime] <= @__end_1)
+      ) AS [t] ON [s].[Id] = [t].[Payer]
+      WHERE [s].[Id] IN ('1', '6') AND ([s].[Area] = 'A')
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (16ms) [Parameters=[@__begin_0='?' (DbType = DateTime2), @__end_1='?' (DbType = DateTime2)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Name], [s].[Area], [t].[Id] AS [OrderId], [t].[Payer], [t].[CreationTime]
+      FROM [SysUser_00] AS [s]
+      INNER JOIN (
+          SELECT [o].[Id], [o].[CreationTime], [o].[Payer]
+          FROM [Order_202103] AS [o]
+          WHERE ([o].[CreationTime] >= @__begin_0) AND ([o].[CreationTime] <= @__end_1)
+      ) AS [t] ON [s].[Id] = [t].[Payer]
+      WHERE [s].[Id] IN ('1', '6') AND ([s].[Area] = 'A')
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (52ms) [Parameters=[@__begin_0='?' (DbType = DateTime2), @__end_1='?' (DbType = DateTime2)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Name], [s].[Area], [t].[Id] AS [OrderId], [t].[Payer], [t].[CreationTime]
+      FROM [SysUser_01] AS [s]
+      INNER JOIN (
+          SELECT [o].[Id], [o].[CreationTime], [o].[Payer]
+          FROM [Order_202104] AS [o]
+          WHERE ([o].[CreationTime] >= @__begin_0) AND ([o].[CreationTime] <= @__end_1)
+      ) AS [t] ON [s].[Id] = [t].[Payer]
+      WHERE [s].[Id] IN ('1', '6') AND ([s].[Area] = 'A')
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (52ms) [Parameters=[@__begin_0='?' (DbType = DateTime2), @__end_1='?' (DbType = DateTime2)], CommandType='Text', CommandTimeout='30']
+      SELECT [s].[Id], [s].[Name], [s].[Area], [t].[Id] AS [OrderId], [t].[Payer], [t].[CreationTime]
+      FROM [SysUser_00] AS [s]
+      INNER JOIN (
+          SELECT [o].[Id], [o].[CreationTime], [o].[Payer]
+          FROM [Order_202104] AS [o]
+          WHERE ([o].[CreationTime] >= @__begin_0) AND ([o].[CreationTime] <= @__end_1)
+      ) AS [t] ON [s].[Id] = [t].[Payer]
+      WHERE [s].[Id] IN ('1', '6') AND ([s].[Area] = 'A')
+```
+因为附带了索引，所以本次查询只需要月份3张表+userid两张表+A区域的一个库所以是3*2*1=6个链接
+::: warning 注意
+1. 如果本次查询涉及`跨表`或者`跨库`并且查询附带`order by`那么order by的字段必须包含在返回结果里面.(聚合函数除外：count,any,sum......)
+2. 应该尽可能避免分库join分库,如果实在需要join那么也应该尽可能指定某一张表或者分表的数目尽可能小。(因为分表后如果a1,a2 join b1,b2那么就会有2个结果相互组合,路由结果越多性能越低，会生成各自datasourcename的交集,并且对各自的库下的表join会生成笛卡尔积)
+:::
+
+### 查询接口支持
+方法  | Method | [Unit Test](https://github.com/xuejmnet/sharding-core/blob/main/test/ShardingCore.Test50/ShardingTest.cs) 
+--- |--- |--- 
+第一条 |FindAsync |yes 
+获取集合 |ToListAsync |yes 
+第一条 |FirstOrDefaultAsync |yes 
+最大 |MaxAsync |yes 
+最小 |MinAsync |yes 
+是否存在 |AnyAsync |yes 
+数目 |CountAsync |yes 
+数目 |LongCountAsync |yes 
+求和 |SumAsync |yes 
+平均 |AverageAsync |yes 
+包含 |ContainsAsync |yes 
+分组 |GroupByAsync |yes 
+
+
+::: warning 注意
+并不是说因为你的字段值是ABC所以我们需要将数据源定义成A、B、C,这边是因为方便通用,一般原则上我们定义为ds0,ds1,ds2，至于`Area`如何转成`ds0`,`ds1`,`ds2`那么就需要你自己去实现，比如你有一个[A..Z]的数组，数组下标就是对应的`ds`后面数字那么你就可以自己实现路由，并且还可以支持大于小于等于
+:::

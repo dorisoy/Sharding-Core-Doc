@@ -15,7 +15,7 @@ category: 重要
 
 ## 缺点
 - 本库的缺点是比较消耗链接，针对dbconnection的消耗比一般的链接要高，但是可以通过启动时候配置`MaxQueryConnectionsLimit`字段来限制单次查询的dbconnection的消耗，从而可以让用户可以进行控制连接数.
-- 目前不支持分表对象的include,(除非你是平行表也就是后缀一样的分片对象)
+- 目前不支持分表对象的include,也不建议你对分表对象进行include,如果你需要操作分表对象请选择join方式而不是include
 - 三方批处理对象需要获取真实dbcontext后才可以支持
 - 因为不支持include所以没必要给sharding对象进行导航属性设置(不支持导航属性)
 
@@ -30,7 +30,7 @@ c#的gethashcode并不能直接用来取模，因为c#的`GetHashCode`会在程�
 
 ## Group By
 
-如果使用group by那么为了保证程序正常执行会在group by下判断如果没有order字段会将所有的select属性加上去，如果有order by那么必须和group by的select字段一样数目
+如果使用group by那么为了保证程序正常执行会在group by下判断如果没有order字段会将所有的select属性加上去，如果有order by那么必须和group by的select字段一样数目,如果group by 对对应属性进行了`avg`操作那么请对该属性同样进行`count`操作
 
 ## GUID
 如果您是sqlserver 并且在用guid排序那么为了和数据库guid排序一致请知悉,`sharding-core`默认会将guid转成sqlguid去比较来保证和数据库一致的排序表现,但是未提供`Nullable<Guid>`的排序正确判断,如果需要可自行实现,下面是一个案例
@@ -57,7 +57,7 @@ public class SqlServerNullableGuidCSharpLanguageShardingComparer<TShardingDbCont
 **注意:如果您使用的框架不是本框架,那么请确认他的分表聚合是否是内存聚合,如果是内存聚合请确保他会有正确的guid排序在数据库和内存之间**
 
 ## 自增Id
-如果您在efcore配置了整型为自增那么请不要对自增字段设置为sharding字段因为会导致分表数据没办法正确分表，因为自增字段只有在正确插入到数据库后才会知道具体的类型，所以不可以吧自增字段设置为分表/分库字段
+如果您在efcore配置了整型为自增那么请不要对自增字段设置为sharding字段因为会导致分表数据没办法正确分表，因为自增字段只有在正确插入到数据库后才会知道具体的值，所以不可以吧自增字段设置为分表/分库字段
 
 ## 性能优化
 如果您对程序的性能有要求建议您针对每个路由开启表达式缓存，并且自行实现多表判断表达式缓存，系统默认会在你启用路由表达式缓存后针对单个表达式比较进行缓存提高10倍编译性能
@@ -75,11 +75,11 @@ public class SqlServerNullableGuidCSharpLanguageShardingComparer<TShardingDbCont
 
 
 ::: danger
-！！！如果开启表达式缓存,请确认返回的表达式为固定值的比较比如tail，而不是每次都是不一样的表达式，不然会导致创建过多表达式从而导致性能问题具体参考[路由表达式缓存](/sharding-core-doc/adv/route-parse-compile-cache/)。
+！！！如果开启表达式缓存,请确认返回的表达式为固定值的比较比如tail，而不是每次都是不一样的表达式，不然会导致创建过多表达式从而导致性能问题具体参考[路由表达式缓存](/sharding-core-doc/adv/route-parse-compile-cache)。
 
-！！！如果开启表达式缓存,请确认返回的表达式为固定值的比较比如tail，而不是每次都是不一样的表达式，不然会导致创建过多表达式从而导致性能问题具体参考[路由表达式缓存](/sharding-core-doc/adv/route-parse-compile-cache/)。
+！！！如果开启表达式缓存,请确认返回的表达式为固定值的比较比如tail，而不是每次都是不一样的表达式，不然会导致创建过多表达式从而导致性能问题具体参考[路由表达式缓存](/sharding-core-doc/adv/route-parse-compile-cache)。
 
-！！！如果开启表达式缓存,请确认返回的表达式为固定值的比较比如tail，而不是每次都是不一样的表达式，不然会导致创建过多表达式从而导致性能问题具体参考[路由表达式缓存](/sharding-core-doc/adv/route-parse-compile-cache/)。
+！！！如果开启表达式缓存,请确认返回的表达式为固定值的比较比如tail，而不是每次都是不一样的表达式，不然会导致创建过多表达式从而导致性能问题具体参考[路由表达式缓存](/sharding-core-doc/adv/route-parse-compile-cache)。
 :::
 
 如果您需要使用一下方法需要注意

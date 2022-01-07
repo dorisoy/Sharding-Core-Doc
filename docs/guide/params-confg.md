@@ -4,40 +4,13 @@ title: 参数配置
 category: 使用指南
 ---
 
-## AutoTrackEntity
-sharding-core默认针对分表后的数据将不支持追踪,未分表的对象支持原生efcore的追踪规则,如果你的查询对象A是部分表的那么依旧符合原生使用efcore的追踪规则,针对分表对象B那么将不再支持追踪.
+## EnableTableRouteCompileCache
+针对分表下的表达式编译,默认null
+针对单个结果的表达式进行编译缓存可以有效的提高性能
 
-### 使用追踪
-你可以设置`AutoTrackEntity`为true
-```csharp
-services.AddShardingConfigure<MyDbContext>((conn, builder) =>
-                {
-                    builder.UseSqlServer(conn);
-                }).Begin(o =>
-                {
-                    o.AutoTrackEntity = true;
-                })
-```
-那么所有的对象都将支持追踪。
-
-### 不启用追踪
-`AutoTrackEntity`设置为true或者false都没什么关系,建议设置为true，因为有可能需要使用追踪
-```csharp
- services.AddShardingDbContext<DefaultShardingDbContext>(
-                    (conn, o) =>
-                        o.UseSqlServer(conn).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
-                ).Begin(o =>
-                {
-                    o.AutoTrackEntity = true;
-                })
-                .AddShardingTransaction((connection, builder) =>
-                    builder.UseSqlServer(connection).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking))
-```
-追加所有的创建`DbContext`的委托`.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)`那么所有的查询都将不再启用追踪除非手动调用`AsTracking`
-
-::: warning 注意
-因为`AutoTrackEntity`设置为false后如果不设置`DbContext`为`.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)`那么分表后的查询依然会走追踪只是程序无法追踪到，因为查询的原理会新创建n个`DbContext`但是这些`DbContext`进行查询的时候并没有使用`NoTracking`所以性能上还是会有一定的损失，**总结就是`AutoTrackEntity`无脑设置为true**
-:::
+## EnableDataSourceRouteCompileCache
+针对分库下的表达式编译,默认null
+针对单个结果的表达式进行编译缓存可以有效的提高性能
 
 ## EnsureCreatedWithOutShardingTable
 

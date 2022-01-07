@@ -8,6 +8,15 @@ category: 使用指南
 
 ## 全局
 
+### IShardingEntityConfigOptions
+`IShardingEntityConfigOptions<TShardingDbContext>`对应配置信息获取
+```csharp
+//直接获取
+ShardingContainer.GetService<IShardingEntityConfigOptions<TShardingDbContext>>();
+//构造函数依赖注入
+IShardingEntityConfigOptions<TShardingDbContext>
+```
+
 ### IEntityMetadataManager
 `IEntityMetadataManager<TShardingDbContext>`管理对象数据，将对象数据分表和分库的对象进行存储管理，可以区分对象是否分表是否分库，并且可以获取对应的对象类型元数据`EntityMetadata`
 
@@ -26,34 +35,33 @@ entityMetadataManager.TryGet(EntityType);
 entityMetadataManager.TryGet<TEntity>(TEntity);
 ```
 
-### IVirtualDataSource
+### IVirtualDataSourceManager
 
-`IVirtualDataSource<TShardingDbContext>`虚拟数据源，虚拟数据源用于记录当前分库拥有多少个数据源名称(拥有多少个:DataSourceName),
+`IVirtualDataSourceManager<TShardingDbContext>`虚拟数据源管理者，虚拟数据源用于记录当前分库拥有多少个数据源名称(拥有多少个:DataSourceName),
 整个dbcontext只有一个，可以通过依赖注入获取 .
 ```csharp
 //直接获取
-ShardingContainer.GetService<IVirtualDataSource<TShardingDbContext>>();
-//通过非泛型方法获取
-(IVirtualDataSource)ShardingContainer.GetService(typeof(IVirtualDataSource<>).GetGenericType0(shardingDbContext.GetType()));
+ShardingContainer.GetRequiredVirtualDataSourceManager<TShardingDbContext>();
+//构造函数依赖注入
+IVirtualDataSourceManager<TShardingDbContext>
 ```
 
-::: tip 自定义标题
-因为`IVirtualDataSource<TShardingDbContext>`继承`IVirtualDataSource`，并且所有的接口都在`IVirtualDataSource`但是注入为了区分多个`DdbContext`之间所以采用泛型注入，其他接口也是同理
-:::
+### IVirtualDataSource
+`IVirtualDataSource<TShardingDbContext>`数据源,可以通过`IVirtualDataSourceManager<TShardingDbContext>`的`GetCurrentVirtualDataSource()`和`GetVirtualDataSource(string configId)`这两个方法获取,其中`IVirtualDataSource`可以获取当前配置的额外信息,通过改`ConfigurationParams`属性
 
 ### DataSourceName
 数据源名称，默认针对`ShardingCore`每个链接都对应其自己的数据源，都有属于自己的数据源名称和数据源的链接。无论是否分表数据源名称都会有，只不过因为仅分表状态下只链接单个数据库，所以数据源名称在整个框架下只有一个，所以如果您是分表那么数据源名称可以随便添加，因为默认的数据源名称有且只有一个。
 ```csharp
 //配置
- .AddDefaultDataSource("ds0","Data Source=localhost;Initial Catalog=ShardingCoreDBxx0;Integrated Security=True;")
-                .AddShardingDataSource(sp =>
-                {
-                    return new Dictionary<string, string>()
-                    {
-                        {"ds1", "Data Source=localhost;Initial Catalog=ShardingCoreDBxx1;Integrated Security=True;"},
-                        {"ds2", "Data Source=localhost;Initial Catalog=ShardingCoreDBxx2;Integrated Security=True;"},
-                    };
-                })
+.AddDefaultDataSource("ds0","Data Source=localhost;Initial Catalog=ShardingCoreDBxx0;Integrated Security=True;");
+.AddExtraDataSource(sp =>
+{
+    return new Dictionary<string, string>()
+    {
+        {"ds1", "Data Source=localhost;Initial Catalog=ShardingCoreDBxx1;Integrated Security=True;"},
+        {"ds2", "Data Source=localhost;Initial Catalog=ShardingCoreDBxx2;Integrated Security=True;"},
+    };
+})
 ```
 通过上面我们可以看到我们其实分了三个数据库分别是`ds0`,`ds1`,`ds2`,使用分表的时候需要注意，仅分表对象才会进入分表，其他所有没有分表路由的对象将全部走DefaultDataSourceName数据库。
 
