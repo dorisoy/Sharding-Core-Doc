@@ -208,39 +208,43 @@ PM> Install-Package Microsoft.EntityFrameworkCore.SqlServer
 
             services.AddControllers();
             
-            services.AddShardingDbContext<MyDbContext>((conStr, builder) =>
+                services.AddShardingDbContext<MyDbContext>()
+                .AddEntityConfig(o =>
                 {
-                    builder.UseSqlServer(conStr).UseLoggerFactory(efLogger);
-                }).Begin(op =>
-                {
-                    //如果您使用code-first建议选择false
-                    op.CreateShardingTableOnStart = true;
-                    //如果您使用code-first建议修改为fsle
-                    op.EnsureCreatedWithOutShardingTable = true;
-                }).AddShardingTransaction((connection, builder) =>
-                {
-                    builder.UseSqlServer(connection).UseLoggerFactory(efLogger);
-                }).AddDefaultDataSource("A",
-                    "Data Source=localhost;Initial Catalog=EFCoreShardingDataSourceDBA;Integrated Security=True;")
-                .AddShardingDataSource(sp=>
-                {
-                    return new Dictionary<string, string>()
-                    {
-                        {
-                            "B",
-                            "Data Source=localhost;Initial Catalog=EFCoreShardingDataSourceDBB;Integrated Security=True;"
-                        },
-                        {
-                            "C",
-                            "Data Source=localhost;Initial Catalog=EFCoreShardingDataSourceDBC;Integrated Security=True;"
-                        },
-                    };
+                    o.CreateShardingTableOnStart = true;
+                    o.EnsureCreatedWithOutShardingTable = true;
+                    o.AddShardingDataSourceRoute<OrderVirtualDataSourceRoute>();
+                    o.AddShardingDataSourceRoute<SysUserVirtualDataSourceRoute>();
                 })
-                .AddShardingDataSourceRoute(op =>
+                .AddConfig(op =>
                 {
-                    op.AddShardingDatabaseRoute<SysUserVirtualDataSourceRoute>();
-                    op.AddShardingDatabaseRoute<OrderVirtualDataSourceRoute>();
-                }).End();
+                    op.ConfigId = "c1";
+                    op.UseShardingQuery((conStr, builder) =>
+                    {
+                        builder.UseSqlServer(conStr).UseLoggerFactory(efLogger);
+                    });
+                    op.UseShardingTransaction((connection, builder) =>
+                    {
+                        builder.UseSqlServer(connection).UseLoggerFactory(efLogger);
+                    });
+                    op.ReplaceTableEnsureManager(sp => new SqlServerTableEnsureManager<MyDbContext>());
+                    op.AddDefaultDataSource("A",
+                    "Data Source=localhost;Initial Catalog=EFCoreShardingDataSourceDBA;Integrated Security=True;");
+                    op.AddExtraDataSource(sp =>
+                    {
+                        return new Dictionary<string, string>()
+                        {
+                            {
+                                "B",
+                                "Data Source=localhost;Initial Catalog=EFCoreShardingDataSourceDBB;Integrated Security=True;"
+                            },
+                            {
+                                "C",
+                                "Data Source=localhost;Initial Catalog=EFCoreShardingDataSourceDBC;Integrated Security=True;"
+                            },
+                        };
+                    });
+                }).EnsureConfig();
         }
 ```
 ::: danger 重要

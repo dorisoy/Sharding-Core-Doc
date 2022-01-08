@@ -5,7 +5,18 @@ category: 重要
 ---
 
 ## 前言
-`sharding-core`主旨是增加efcore，针对efcore的分片方面进行增强，并且不对efcore的业务代码进行侵入。不解决数据库层面的问题，编写复杂sql如果在sql层面是慢的那么`sharding-core`也是无能为力的.
+`ShardingCore`主旨是增加efcore，针对efcore的分片方面进行增强，并且不对efcore的业务代码进行侵入。不解决数据库层面的问题，编写复杂sql如果在sql层面是慢的那么`sharding-core`也是无能为力的.
+
+## 版本
+`ShardingCore`版本格式为a.b.c.d
+
+- **a**表示`efcore`的版本号
+- **b**表示`ShardingCore`主要版本号
+- **c**表示`ShardingCore`小版本号
+- **d**表示`ShardingCore`修订版本号
+
+## 常见问题
+因为当前架构师在当前dbcontext作为壳运行,crud会创建真实的dbcontext依托在当前dbcontext上,所以当前dbcontext目前crud都是可以的没有问题,但是如果遇到需要获取track或者其他的一些处理就不应该在当前dbcontext上处理,应该通过内部的DbContextExecutor来获取内部的DbContext来进行处理
 
 ## 损耗
 1.未分片对象查询,`ShardingCore`在针对未分片对象的查询上面进行了优化,单次的查询仅`0.005ms`损耗,性能为原生efcore的97%;
@@ -14,10 +25,10 @@ category: 重要
 当数据为瓶颈时分片后可以提高的性能是线性提升的,在数据库未成为读取数据库瓶颈时,整个查询两者差距不大
 
 ## 缺点
-- 本库的缺点是比较消耗链接，针对dbconnection的消耗比一般的链接要高，但是可以通过启动时候配置`MaxQueryConnectionsLimit`字段来限制单次查询的dbconnection的消耗，从而可以让用户可以进行控制连接数.
-- 目前不支持分表对象的include,也不建议你对分表对象进行include,如果你需要操作分表对象请选择join方式而不是include
-- 三方批处理对象需要获取真实dbcontext后才可以支持
-- 因为不支持include所以没必要给sharding对象进行导航属性设置(不支持导航属性)
+- 本库的缺点是比较消耗链接，针对`dbconnection`的消耗比一般的链接要高，但是可以通过启动时候配置`MaxQueryConnectionsLimit`字段来限制单次查询的`dbconnection`的消耗，从而可以让用户可以进行控制连接数.
+- 目前不支持分表对象的`Include`,也不建议你对分表对象进行include,如果你需要操作分表对象请选择join方式而不是include
+- 三方批处理对象需要获取真实`dbcontext`后才可以支持
+- 因为不支持`Include`所以没必要给sharding对象进行导航属性设置(不支持导航属性)
 
 ## 为什么不用union或者union all
 虽然union(all)在单表分表下面性能很好,但是再多表join下面生成的sql将是不可控的，性能和索引将是一个大大的问题因为涉及到分表的多表不一定索引一直因为可能会出现数据偏向问题建立不同的所以结构导致索引失效不好优化、并且不支持分库等一系列问题

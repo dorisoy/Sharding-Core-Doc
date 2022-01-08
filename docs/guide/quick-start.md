@@ -130,8 +130,8 @@ public class OrderVirtualTableRoute:AbstractSimpleShardingModKeyStringVirtualTab
         public void ConfigureServices(IServiceCollection services)
         {
 
-            //额外添加分片配置
-            services.AddShardingConfigure<MyDbContext>()
+            //添加分片配置
+            services.AddShardingDbContext<MyDbContext>()
                 .AddEntityConfig(op =>
                 {
                     op.CreateShardingTableOnStart = true;
@@ -185,10 +185,28 @@ public class ValuesController : Controller
         }
 }
 ```
-
 ::: tip 提示
   1. 如果程序无法启动请确保一下几点，确认是否已经注入原生的efcore的DbContext,并且在原生的后续对DbContextOptions进行了`UseSharding<MyDbContext>()`配置
-  2. 是否配置了额外分片`AddShardingConfigure`(第一种配置可以忽略)，是否创建了通过字符串委托和链接委托
+  2. 目前`ShardingCore`提供了三种配置方式
+  - 1.默认配置
+  ```csharp
+  services.AddShardingDbContext<MyDbContext>()
+  ```
+  这个配置包含了`AddDbContext`+`AddShardingConfigure`
+  - 2.额外配置
+  ```csharp
+    //原来的dbcontext配置
+    services.AddDbContext<MyDbContext>(DIExtension.UseDefaultSharding<MyDbContext>);
+    //额外添加分片配置
+    services.AddShardingConfigure<MyDbContext>()
+  ```
+  - 3.字符串配置适合单配置的情况下
+  ```csharp
+    //原来的dbcontext配置
+    services.AddDbContext<MyDbContext>(options=>options.UseSqlServer("连接字符串必须和AddConfig的DefaultDataSource一样").UseSharding<TodoAppDbContext>());//UseSharding<TodoAppDbContext>()必须要配置
+    //额外添加分片配置
+    services.AddShardingConfigure<MyDbContext>()
+  ```
   3. default data source 的连接字符串是否和默认dbcontext创建的一致
   4. 是否添加了分表路由`op.AddShardingTableRoute<OrderVirtualTableRoute>();`
   5. 是否启动了分表启动器`buildServiceProvider.GetRequiredService<IShardingBootstrapper>().Start();`

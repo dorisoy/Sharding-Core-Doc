@@ -151,25 +151,44 @@ PM> Install-Package Microsoft.EntityFrameworkCore.SqlServer
 
             services.AddControllers();
             //添加一下代码
-            services.AddShardingDbContext<MyDbContext>((conStr, builder) =>
+            services.AddShardingDbContext<MyDbContext>().AddEntityConfig(op =>
+            {
+                //如果您使用code-first建议选择false
+                op.CreateShardingTableOnStart = true;
+                //如果您使用code-first建议修改为fsle
+                op.EnsureCreatedWithOutShardingTable = true;
+                //当无法获取路由时会返回默认值而不是报错
+                op.ThrowIfQueryRouteNotMatch = false;
+                op.AddShardingTableRoute<SysUserVirtualTableRoute>();
+                op.AddShardingTableRoute<OrderVirtualTableRoute>();
+                op.AddShardingTableRoute<MultiShardingOrderVirtualTableRoute>();
+            }).AddConfig(op =>
+            {
+                op.ConfigId = "a";
+                op.UseShardingQuery((conStr, builder) =>
                 {
-                    builder.UseSqlServer(conStr);
-                }).Begin(op =>
+                    builder.UseSqlServer(conStr).UseLoggerFactory(efLogger);
+                });
+                op.UseShardingTransaction((connection, builder) =>
                 {
-                    //如果您使用code-first建议选择false
-                    op.CreateShardingTableOnStart = true;
-                    //如果您使用code-first建议修改为fsle
-                    op.EnsureCreatedWithOutShardingTable = true;
-                }).AddShardingTransaction((connection, builder) =>
+                    builder.UseSqlServer(connection).UseLoggerFactory(efLogger);
+                });
+                op.AddDefaultDataSource("ds0",
+                    "Data Source=localhost;Initial Catalog=EFCoreShardingTableDB;Integrated Security=True;");
+                op.AddReadWriteSeparation(sp =>
                 {
-                    builder.UseSqlServer(connection);
-                }).AddDefaultDataSource("ds0",
-                    "Data Source=localhost;Initial Catalog=EFCoreShardingTableDB;Integrated Security=True;")
-                .AddShardingTableRoute(op =>
-                {
-                    op.AddShardingTableRoute<SysUserVirtualTableRoute>();
-                    op.AddShardingTableRoute<OrderVirtualTableRoute>();
-                }).End();
+                    return new Dictionary<string, IEnumerable<string>>()
+                    {
+                        {
+                            "ds0", new List<string>()
+                            {
+                                "Data Source=localhost;Initial Catalog=EFCoreShardingTableDB;Integrated Security=True;"
+                            }
+                        }
+                    };
+                }, ReadStrategyEnum.Loop, defaultEnable: true);
+                op.ReplaceTableEnsureManager(sp=>new SqlServerTableEnsureManager<MyDbContext>());
+            }).EnsureConfig();
         }
 ```
 ::: danger 重要
