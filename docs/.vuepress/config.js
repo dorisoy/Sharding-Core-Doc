@@ -61,11 +61,6 @@ module.exports = config({
         link: "https://xuejm.gitee.io/sharding-core-doc/",
         icon: "note",
       },
-      {
-        text: "x.3版本文档",
-        link: "/x3/",
-        icon: "note",
-      },
     ],
 
     sidebar: {
@@ -83,68 +78,6 @@ module.exports = config({
           icon: "creative",
           prefix: "guide/",
           children: ["introduce","terminology","quick-start","params-confg"],
-        },
-        {
-          title: "分表",
-          icon: "stack",
-          prefix: "sharding-table/",
-          children: ["init","query","update","delete"],
-        },
-        {
-          title: "分库",
-          icon: "mysql",
-          prefix: "sharding-data-source/",
-          children: ["init","query","update","delete"],
-        },
-        {
-          title: "分表且分库",
-          icon: "overflow",
-          prefix: "sharding-all/",
-          children: ["init","query","update","delete"],
-        },
-        {
-          title: "读写分离",
-          icon: "overflow",
-          prefix: "read-write/",
-          children: ["configure"],
-        },
-        {
-          title: "路由",
-          icon: "creative",
-          prefix: "sharding-route/",
-          children: ["default-route","customer-route","manual-route"],
-        },
-        {
-          title: "查询",
-          icon: "creative",
-          prefix: "query/",
-          children: ["single-entity-query","multi-entity-query","group-by-query","query-in-transaction"],
-        },
-        {
-          title: "高级",
-          icon: "creative",
-          prefix: "adv/",
-          children: ["code-first","pagination","dynamic-table","dynamic-data-source","batch-operate","transaction","route-parse-compile-cache","connection-mode","multi-sharding-property-1","multi-sharding-property-2"],
-        },
-        "question",
-        "abp",
-        "unit-test-coverage",
-        "benchmark",
-        "query-notes"
-      ],
-      "/x3": [
-        {
-          title: "开发者文档",
-          icon: "creative",
-          prefix: "deveploer/",
-          children: ["architecture","execute-process","query-notes"],
-        },
-        "important",
-        {
-          title: "指南",
-          icon: "creative",
-          prefix: "guide/",
-          children: ["introduce","terminology","quick-start","quick-start-old-bird","params-confg","auto-track"],
         },
         {
           title: "分表",
