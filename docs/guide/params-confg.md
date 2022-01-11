@@ -5,6 +5,7 @@ category: 使用指南
 ---
 
 ## 配置
+```csharp
  services.AddShardingDbContext<MyDbContext>().AddEntityConfig(op =>
             {
                 //如果您使用code-first建议选择false
@@ -88,6 +89,7 @@ category: 使用指南
                 }, ReadStrategyEnum.Loop, defaultEnable: true);
             }).EnsureConfig(ShardingConfigurationStrategyEnum.ThrowIfNull);//单个配置后续不会增加了的 如果无法匹配会抛出异常
             //.EnsureMultiConfig(ShardingConfigurationStrategyEnum.ThrowIfNull)//多个配置后续还会增加,使用时必须指定configId 如果无法匹配会抛出异常 还可以指定返回优先级最高的或者返回null 但是返回null的情况下sharding-core将无法正常运行
+```
 
 ## EnableTableRouteCompileCache
 针对分表下的表达式编译,默认null

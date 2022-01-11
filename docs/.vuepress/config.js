@@ -34,12 +34,7 @@ module.exports = config({
       lang: "en-US",
       title: "ShardingCore Document",
       description: "ShardingCore Document",
-    },
-    "/x3/": {
-      lang: "zh-CN",
-      title: "x.3.x.x版本文档",
-      description: "x.3版本文档",
-    },
+    }
   },
   themeConfig: {
     logo: "/logo.svg",
@@ -125,7 +120,8 @@ module.exports = config({
         "abp",
         "unit-test-coverage",
         "benchmark",
-        "query-notes"
+        "query-notes",
+        "tenant"
       ],
     },
 
