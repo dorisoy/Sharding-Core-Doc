@@ -18,6 +18,17 @@ category: 重要
 ## 常见问题
 因为当前架构师在当前dbcontext作为壳运行,crud会创建真实的dbcontext依托在当前dbcontext上,所以当前dbcontext目前crud都是可以的没有问题,但是如果遇到需要获取track或者其他的一些处理就不应该在当前dbcontext上处理,应该通过内部的DbContextExecutor来获取内部的DbContext来进行处理
 
+## DbContext构造函数问题
+请不要再DbContext构造函数内部调用会让model提前确定的方法比如
+```c#
+        public DefaultShardingDbContext(DbContextOptions<DefaultShardingDbContext> options) : base(options)
+        {
+            //切记不要在构造函数中使用会让模型提前创建的方法
+            //ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+            //Database.SetCommandTimeout(30000);
+        }
+```
+
 ## 损耗
 1.未分片对象查询,`ShardingCore`在针对未分片对象的查询上面进行了优化,单次的查询仅`0.005ms`损耗,性能为原生efcore的97%;
 2.分片对象和原生efcore对象查询，在主键查询的情况下也就是只考虑`ShardingCore`损耗的情况下为单次`0.06ms`-`0.08ms`左右
