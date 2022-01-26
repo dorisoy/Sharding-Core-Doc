@@ -7,6 +7,8 @@ category: 高级
 ## 介绍
 用过efcore的小伙伴肯定都知道code first是很久之前就一直在主打的一种编程方式,他可以让我们直接上手编程,而不需要去构建数据库,以一种先写代码后自动创建数据库的模式让开发者从数据库设计中脱离出来，更多的是快速进入到开发的一种状态。
 
+本项目[demo示例](https://github.com/xuejmnet/sharding-core/tree/main/samples/Sample.Migrations)
+
 ## 安装
 首先无论你是aspnetcore还是普通的控制台程序，我们这边需要做的是新建一个控制台程序，命名为`Project.Migrations`,如果您是分层架构，那么请对当前的控制台程序进行`efcore`所在层的类库进行引用。引用的类库如果不存在`sharding-core`也请安装上。最后安装`Microsoft.EntityFrameworkCore.Tools`请选择对应的`efcore`对应版本
 
@@ -178,24 +180,33 @@ dotnet add package Microsoft.EntityFrameworkCore.Tools
         static DefaultDesignTimeDbContextFactory()
         {
             var services = new ServiceCollection();
-            services.AddShardingDbContext<DefaultShardingTableDbContext>(
-                    (conn, o) =>
-                        o.UseSqlServer(conn)
-                            .ReplaceService<IMigrationsSqlGenerator, ShardingSqlServerMigrationsSqlGenerator<DefaultShardingTableDbContext>>()
-                ).Begin(o =>
+    
+            services.AddShardingDbContext<DefaultShardingTableDbContext>()
+            .AddEntityConfig(o =>
+            {
+                o.CreateShardingTableOnStart = false;
+                o.CreateDataBaseOnlyOnStart = true;
+                o.EnsureCreatedWithOutShardingTable = false;
+                o.AddShardingTableRoute<ShardingWithModVirtualTableRoute>();
+                o.AddShardingTableRoute<ShardingWithDateTimeVirtualTableRoute>();
+            })
+            .AddConfig(op =>
+            {
+                op.ConfigId = "c1";
+                op.UseShardingQuery((conStr, builder) =>
                 {
-                    o.CreateShardingTableOnStart = false;
-                    o.EnsureCreatedWithOutShardingTable = false;
-                })
-                .AddShardingTransaction((connection, builder) =>
-                    builder.UseSqlServer(connection))
-                .AddDefaultDataSource("ds0",
-                    "Data Source=localhost;Initial Catalog=ShardingCoreDBMigration;Integrated Security=True;")
-                .AddShardingTableRoute(o =>
+                    builder.UseSqlServer(conStr)
+                        .ReplaceService<IMigrationsSqlGenerator, ShardingSqlServerMigrationsSqlGenerator<DefaultShardingTableDbContext>>();
+                        //.ReplaceService<IMigrationsModelDiffer, RemoveForeignKeyMigrationsModelDiffer>();//如果需要移除外键可以添加这个
+                });
+                op.UseShardingTransaction((connection, builder) =>
                 {
-                    o.AddShardingTableRoute<ShardingWithModVirtualTableRoute>();
-                    o.AddShardingTableRoute<ShardingWithDateTimeVirtualTableRoute>();
-                }).End();
+                    builder.UseSqlServer(connection);
+                });
+                op.ReplaceTableEnsureManager(sp => new SqlServerTableEnsureManager<DefaultShardingTableDbContext>());
+                op.AddDefaultDataSource("ds0", "Data Source=localhost;Initial Catalog=ShardingCoreDBMigration;Integrated Security=True;");
+                
+            }).EnsureConfig();
             services.AddLogging();
             var buildServiceProvider = services.BuildServiceProvider();
             ShardingContainer.SetServices(buildServiceProvider);
