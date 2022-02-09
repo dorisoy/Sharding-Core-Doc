@@ -56,7 +56,7 @@ PM> Install-Package Microsoft.EntityFrameworkCore.SqlServer
 ```
 
 ### 创建DbContext
-这样我们就创建好了三张表，接下来我们创建我们的`DbContext`,因为不需要分表所以我们并不需要继承`IShardingTableDbContext`接口
+这样我们就创建好了三张表，接下来我们创建我们的`DbContext`,因为需要分表所以我们需要实现`IShardingTableDbContext`接口
 ```csharp
 
     public class MyDbContext:AbstractShardingDbContext,IShardingTableDbContext
