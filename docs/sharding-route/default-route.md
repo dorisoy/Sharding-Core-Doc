@@ -4,6 +4,12 @@ title: 默认路由
 category: 路由
 ---
 
+::: warning 注意
+!!!默认xxxKeyLong的路由代表分片时间是毫秒的意思,需要自行判断你生成的long和`ShardingCoreHelper.ConvertDateTimeToLong(DateTime.Now)`是否一样!!!
+!!!默认xxxKeyLong的路由代表分片时间是毫秒的意思,需要自行判断你生成的long和`ShardingCoreHelper.ConvertDateTimeToLong(DateTime.Now)`是否一样!!!
+!!!默认xxxKeyLong的路由代表分片时间是毫秒的意思,需要自行判断你生成的long和`ShardingCoreHelper.ConvertDateTimeToLong(DateTime.Now)`是否一样!!!
+:::
+
 ## 默认路由
 分库提供了默认的路由分表则需要自己去实现,具体实现可以参考分库
 
