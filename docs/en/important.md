@@ -3,6 +3,34 @@ icon: launch
 title: Important
 category: Important
 ---
+## Version
+`ShardingCore` version is a.b.c.d
+- a:`EFCore` version
+- b:`ShardingCore` version
+- c:`ShardingCore` second version
+- d:`ShardingCore` fix version
+
+## Common Problem
+current dbcontext is virtual dbcontext not real execute dbcontext，real dbcontext is in DbContextExecutor
+
+## DbContext Constructor Problem
+dont use ant method that will created model before.
+```c#
+        public DefaultShardingDbContext(DbContextOptions<DefaultShardingDbContext> options) : base(options)
+        {
+            //dont invoke
+            //ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+            //Database.SetCommandTimeout(30000);
+        }
+```
+## Performance loss
+query no sharding entity,`ShardingCore` slow than `EFCore` 0.005ms single query;
+
+## Disadvantage
+- use more conection in single query，but u can limit with start up options:`MaxQueryConnectionsLimit`
+- sharding entity not support include,if u want join two entities u can use join.
+- sharding entity dont set nav properties like icollection or list
+
 ## GetHashCode
 c# `GetHashCode` 
 

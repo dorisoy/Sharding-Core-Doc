@@ -70,5 +70,20 @@ use same as efcore native operation
 
 support efcore2+ version sharding
 
+* **multi entity properity sharding**
+
+sharding entity can set more than one property to support sharding query
+
+* **dynaimc sharding database**
+
+support dynamic sharding database in application running
+
+* **dynamic read write**
+
+support dynamic read write in application running
+
+* **dynamic multi sharding config**
+
+support dynamic multi sharding config in application running
 
 go!  go!  go!
