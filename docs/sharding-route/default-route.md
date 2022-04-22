@@ -39,7 +39,7 @@ AbstractSimpleShardingYearKeyLongVirtualTableRoute |按时间戳 |yyyy | `>,>=,<
 ### AbstractSimpleShardingModKeyIntVirtualTableRoute
 该路由为简单的取模hash路由,分表字段是`int`类型,接受3个参数，第一个参数表示后缀的位数,第二位表示取模的基数，第三位是取模后缀不足的左补字符.
 
-AbstractSimpleShardingModKeyStringVirtualTableRoute(3,6,'0')那么就是`000`、`001`、`002`、`003`、`004`、`005`
+AbstractSimpleShardingModKeyIntVirtualTableRoute(3,6,'0')那么就是`000`、`001`、`002`、`003`、`004`、`005`
 
 ### AbstractSimpleShardingModKeyStringVirtualTableRoute
 该路由为简单的取模hash路由,分表字段是`string`类型,接受3个参数，第一个参数表示后缀的位数,第二位表示取模的基数，第三位是取模后缀不足的左补字符.
