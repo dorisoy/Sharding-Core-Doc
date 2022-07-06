@@ -34,6 +34,11 @@ module.exports = config({
       lang: "en-US",
       title: "ShardingCore Document",
       description: "ShardingCore Document",
+    },
+    "/5x/": {
+      lang: "5x",
+        title: "ShardingCore文档",
+        description: "ShardingCore x.5.x.x文档",
     }
   },
   themeConfig: {
@@ -68,11 +73,12 @@ module.exports = config({
         },
         "important",
         "guide-upgrade-3-4",
+        "guide-upgrade-5-6",
         {
           title: "指南",
           icon: "creative",
           prefix: "guide/",
-          children: ["introduce","terminology","quick-start","params-confg"],
+          children: ["introduce","terminology","quick-start-aspnetcore","params-confg"],
         },
         {
           title: "分表",

@@ -4,6 +4,16 @@ title: 重要
 category: 重要
 ---
 
+
+
+::: danger
+！！！升级如果不使用`app.ApplictaionServices.UseAutoShardingCreate()`将不会自动创建表任务请注意
+
+！！！升级如果不使用`app.ApplictaionServices.UseAutoShardingCreate()`将不会自动创建表任务请注意
+
+！！！升级如果不使用`app.ApplictaionServices.UseAutoShardingCreate()`将不会自动创建表任务请注意
+:::
+
 ## 前言
 `ShardingCore`主旨是增加efcore，针对efcore的分片方面进行增强，并且不对efcore的业务代码进行侵入。不解决数据库层面的问题，编写复杂sql如果在sql层面是慢的那么`sharding-core`也是无能为力的.
 
@@ -42,7 +52,7 @@ category: 重要
 - 因为不支持`Include`所以没必要给sharding对象进行导航属性设置(不支持导航属性)
 
 ## 为什么不用union或者union all
-虽然union(all)在单表分表下面性能很好,但是再多表join下面生成的sql将是不可控的，性能和索引将是一个大大的问题因为涉及到分表的多表不一定索引一直因为可能会出现数据偏向问题建立不同的所以结构导致索引失效不好优化、并且不支持分库等一系列问题
+虽然union(all)在单表分表下面实现简单,支持的语句多但是性能随着表数量和表数据的增多性能逐渐下降更别说索引失效的场景,但是再多表join下面生成的sql将是不可控的，性能和索引将是一个大大的问题因为涉及到分表的多表不一定索引一直因为可能会出现数据偏向问题建立不同的所以结构导致索引失效不好优化、并且不支持分库等一系列问题
 
 ### 查询为读写分离支持追踪
 如果本次查询是读写分离无论走的什么链接都支持对应对象的追踪
@@ -55,7 +65,7 @@ c#的gethashcode并不能直接用来取模，因为c#的`GetHashCode`会在程�
 如果使用group by那么为了保证程序正常执行会在group by下判断如果没有order字段会将所有的select属性加上去，如果有order by那么必须和group by的select字段一样数目,如果group by 对对应属性进行了`avg`操作那么请对该属性同样进行`count`操作
 
 ## GUID
-如果您是sqlserver 并且在用guid排序那么为了和数据库guid排序一致请知悉,`sharding-core`默认会将guid转成sqlguid去比较来保证和数据库一致的排序表现,但是未提供`Nullable<Guid>`的排序正确判断,如果需要可自行实现,下面是一个案例
+如果您是sqlserver 并且在用guid排序那么为了和数据库guid排序一致请知悉,`sharding-core`默认会将guid转成sqlguid去比较来保证和数据库一致的排序表现,但是未提供`Nullable<Guid>`的排序正确判断,如果需要可自行实现,下面是一个案例,默认`ShardingCore`已处理`Guid`的情况
 ```csharp
 /// <summary>
 /// like this example
@@ -81,7 +91,7 @@ public class SqlServerNullableGuidCSharpLanguageShardingComparer<TShardingDbCont
 ## 自增Id
 如果您在efcore配置了整型为自增那么请不要对自增字段设置为sharding字段因为会导致分表数据没办法正确分表，因为自增字段只有在正确插入到数据库后才会知道具体的值，所以不可以吧自增字段设置为分表/分库字段
 
-## 性能优化
+## 性能优化(已经弃用表达式构建条件无需缓存)
 如果您对程序的性能有要求建议您针对每个路由开启表达式缓存，并且自行实现多表判断表达式缓存，系统默认会在你启用路由表达式缓存后针对单个表达式比较进行缓存提高10倍编译性能
 
 ```csharps
@@ -96,16 +106,8 @@ public class SqlServerNullableGuidCSharpLanguageShardingComparer<TShardingDbCont
 ```
 
 
-::: danger
-！！！如果开启表达式缓存,请确认返回的表达式为固定值的比较比如tail，而不是每次都是不一样的表达式，不然会导致创建过多表达式从而导致性能问题具体参考[路由表达式缓存](/sharding-core-doc/adv/route-parse-compile-cache)。
-
-！！！如果开启表达式缓存,请确认返回的表达式为固定值的比较比如tail，而不是每次都是不一样的表达式，不然会导致创建过多表达式从而导致性能问题具体参考[路由表达式缓存](/sharding-core-doc/adv/route-parse-compile-cache)。
-
-！！！如果开启表达式缓存,请确认返回的表达式为固定值的比较比如tail，而不是每次都是不一样的表达式，不然会导致创建过多表达式从而导致性能问题具体参考[路由表达式缓存](/sharding-core-doc/adv/route-parse-compile-cache)。
-:::
-
 如果您需要使用一下方法需要注意
-## EnsureCreated
+## EnsureCreated (建议使用migrate)
 `DbContext.Database.EnsureCreated()`如果您需要使用这个接口请自行实现`IMigrationsSqlGenerator`
 
 ## 时间分表

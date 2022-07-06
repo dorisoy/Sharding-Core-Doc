@@ -8,7 +8,7 @@
     "docs:clean-dev": "vuepress dev docs --no-cache",
     "docs:dev": "vuepress dev docs --temp .temp",
     "docs:eject-theme": "vuepress eject-hope docs",
-    "deploy": "yarn docs:build && bash scripts/deploy.sh"
+    "deploy": "yarn docs:build && bash deploy.sh"
   },
   "devDependencies": {
     "vuepress": "^1.8.2",
