@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>多租户 | ShardingCore文档</title>
+    <meta name="generator" content="VuePress 1.9.7">
+    <link rel="alternate" type="application/atom+xml" href="https://vuepress-theme-hope-demo.mrhope.site/sharding-core-doc/atom.xml" title="ShardingCore官方文档 Atom Feed">
+    <link rel="alternate" type="application/json" href="https://vuepress-theme-hope-demo.mrhope.site/sharding-core-doc/feed.json" title="ShardingCore官方文档 JSON Feed">
+    <link rel="alternate" type="application/rss+xml" href="https://vuepress-theme-hope-demo.mrhope.site/sharding-core-doc/rss.xml" title="ShardingCore官方文档 RSS Feed">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="icon" href="/assets/icon/chrome-mask-512.png" type="image/png" sizes="512x512">
+    <link rel="icon" href="/assets/icon/chrome-mask-192.png" type="image/png" sizes="192x192">
+    <link rel="icon" href="/assets/icon/chrome-512.png" type="image/png" sizes="512x512">
+    <link rel="icon" href="/assets/icon/chrome-192.png" type="image/png" sizes="192x192">
+    <link rel="manifest" href="/sharding-core-doc/manifest.webmanifest" crossorigin="use-credentials">
+    <link rel="apple-touch-icon" href="/assets/icon/apple-icon-152.png">
+    <meta name="description" content="ShardingCore文档">
+    <meta property="og:url" content="/sharding-core-doc/tenant.html">
+    <meta property="og:site_name" content="ShardingCore官方文档">
+    <meta property="og:title" content="多租户">
+    <meta property="og:description" content="背景 因为之前有小伙伴在使用ShardingCore的时候问过我是否可以利用ShardingCore的分库功能实现多租户呢，我的回答是可以的，但是需要针对分库对象进行路由的编写，相当于我一个项目需要实现多租户所有的表都需要实现分库才可以，那么这个在实际应用中将是不切实际的，所以虽然分库可以用来进行多租户但是一般没人会真的这样操作，那么就没有办法在Shardi">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="zh-CN">
+    <meta property="og:locale:alternate" content="en-US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image:alt" content="ShardingCore官方文档">
+    <meta property="article:author" content="xuejiaming">
+    <meta name="theme-color" content="#46bd87">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="msapplication-TileImage" content="/assets/icon/ms-icon-144.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    
+    <link rel="preload" href="/sharding-core-doc/assets/css/0.styles.52e8bd2b.css" as="style"><link rel="preload" href="/sharding-core-doc/assets/js/app.c30c90f5.js" as="script"><link rel="preload" href="/sharding-core-doc/assets/js/layout-Layout.68522c6f.js" as="script"><link rel="preload" href="/sharding-core-doc/assets/js/layout-Blog~layout-Layout~layout-NotFound.ed3b050f.js" as="script"><link rel="preload" href="/sharding-core-doc/assets/js/page-多租户.d1480e2a.js" as="script"><link rel="preload" href="/sharding-core-doc/assets/js/vendors~layout-Blog~layout-Layout~layout-NotFound.736063d3.js" as="script"><link rel="prefetch" href="/sharding-core-doc/assets/js/80.f87d16f9.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/81.91d15903.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/82.783d60d8.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/83.1ebe8937.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/84.9c5b1081.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/85.291ba1e7.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/layout-Blog.9f2d2c57.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/layout-NotFound.5844eb43.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/layout-Slide.6cd528be.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-AbpVNext.87c6b8a7.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-BatchOperate.7e55a398.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-CodeFirst.af422d63.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-CustomLayout.d53dcadd.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-DynamicAppendTable.4727754f.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-ExtensionOnNowTable.277945b8.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-FirstOrDefault.6b39de84.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-HighPerformancePage.783e8160.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-Important.291ee592.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-IntegrateWithAbpVNext.a9b8634e.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-IntroPage.2881e4cb.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-Introduce.156d7368.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-Markdown增强.223dcdaa.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-ProjectHome.d9cd3949.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-Projecthome.8e1f8a30.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-RouteParseCompileCache.1b96545c.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-Slidepage.d9112cfe.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-Transaction.bb16fff7.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-x3升级到x4指南.6ad77ec4.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-x5升级到x6指南.f17aef9e.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-不迁移原表数据分表.0e51ef17.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-事务.63a7e9d0.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-事务中查询.389045f7.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-介绍.7a24f546.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-修改.b229a4c9.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-分库.517f78da.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-分组查询.bc7e3a84.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-分表.95778123.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-分表并且分库.f8b8b5ea.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-初始化.cf68b66e.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-删除.cac52dff.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-动态追加分库.94323b5f.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-动态追加分表.f8639e60.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-单元测试覆盖率.4ba8312c.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-单对象查询.a556d371.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-参数配置.85b54760.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-多字段分片1.ed344433.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-多字段分片2.8115eae0.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-密码加密的文章.96d69efa.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-常见的问题.ef078adb.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-幻灯片页.d1e15d8f.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-快速上手.053b66b0.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-快速上手AspNetCore.efad3ded.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-快速上手控制台.f3359a43.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-快速上手老鸟.f847c056.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-性能测试.26672e32.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-手动路由.584f218b.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-执行流程.3d819307.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-批量操作.4397baca.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-架构.9d5bbdae.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-查询.d716a5d3.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-查询注意事项.5094c7fb.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-概念.6f7a4042.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-注意事项.c00d68dd.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-组件禁用.46b0b03a.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-组合查询.364b8f66.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-自动追踪.35d08e3d.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-自定义布局.e89ce159.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-自定义路由.b73b6b50.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-读写分离.0276ed15.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-路由表达式缓存.ecac23e0.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-重要.1d9632f0.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-链接模式.e703a7fe.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-页面配置.9b2a36f4.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-项目主页.0bf6d20d.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-高性能分页.5d5e1f73.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/page-默认路由.2dc0f611.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/vendors~flowchart.7e2bda2c.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/vendors~mermaid.f29e9a56.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/vendors~photo-swipe.6a169c8a.js"><link rel="prefetch" href="/sharding-core-doc/assets/js/vendors~reveal.8a052e15.js">
+    <link rel="stylesheet" href="/sharding-core-doc/assets/css/0.styles.52e8bd2b.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container has-navbar has-sidebar has-anchor"><header class="navbar"><!----> <div class="content__navbar-start"></div> <button title="Sidebar Button" class="sidebar-button"><span class="icon"></span></button> <a href="/sharding-core-doc/" class="home-link router-link-active"><img src="/sharding-core-doc/logo.svg" alt="ShardingCore官方文档" class="logo"> <!----> <span class="site-name can-hide">ShardingCore官方文档</span></a> <!----> <div class="content__navbar-center"></div> <div class="links"><button tabindex="-1" aria-hidden="true" class="color-button"><svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" class="skin-icon"><path d="M224 800c0 9.6 3.2 44.8 6.4 54.4 6.4 48-48 76.8-48 76.8s80 41.6 147.2 0 134.4-134.4
+        38.4-195.2c-22.4-12.8-41.6-19.2-57.6-19.2C259.2 716.8 227.2 761.6 224 800zM560 675.2l-32
+        51.2c-51.2 51.2-83.2 32-83.2 32 25.6 67.2 0 112-12.8 128 25.6 6.4 51.2 9.6 80 9.6 54.4 0
+        102.4-9.6 150.4-32l0 0c3.2 0 3.2-3.2 3.2-3.2 22.4-16 12.8-35.2
+        6.4-44.8-9.6-12.8-12.8-25.6-12.8-41.6 0-54.4 60.8-99.2 137.6-99.2 6.4 0 12.8 0 22.4
+        0 12.8 0 38.4 9.6 48-25.6 0-3.2 0-3.2 3.2-6.4 0-3.2 3.2-6.4 3.2-6.4 6.4-16 6.4-16 6.4-19.2
+        9.6-35.2 16-73.6 16-115.2 0-105.6-41.6-198.4-108.8-268.8C704 396.8 560 675.2 560 675.2zM224
+        419.2c0-28.8 22.4-51.2 51.2-51.2 28.8 0 51.2 22.4 51.2 51.2 0 28.8-22.4 51.2-51.2 51.2C246.4
+        470.4 224 448 224 419.2zM320 284.8c0-22.4 19.2-41.6 41.6-41.6 22.4 0 41.6 19.2 41.6 41.6 0
+        22.4-19.2 41.6-41.6 41.6C339.2 326.4 320 307.2 320 284.8zM457.6 208c0-12.8 12.8-25.6 25.6-25.6
+        12.8 0 25.6 12.8 25.6 25.6 0 12.8-12.8 25.6-25.6 25.6C470.4 233.6 457.6 220.8 457.6 208zM128
+        505.6C128 592 153.6 672 201.6 736c28.8-60.8 112-60.8 124.8-60.8-16-51.2 16-99.2
+        16-99.2l316.8-422.4c-48-19.2-99.2-32-150.4-32C297.6 118.4 128 291.2 128 505.6zM764.8
+        86.4c-22.4 19.2-390.4 518.4-390.4 518.4-22.4 28.8-12.8 76.8 22.4 99.2l9.6 6.4c35.2 22.4
+        80 12.8 99.2-25.6 0 0 6.4-12.8 9.6-19.2 54.4-105.6 275.2-524.8 288-553.6
+        6.4-19.2-3.2-32-19.2-32C777.6 76.8 771.2 80 764.8 86.4z"></path></svg> <div class="color-picker-menu" style="display:none;"><div class="theme-options"><ul class="themecolor-select"><label for="themecolor-select">主题色:</label> <li><span class="default-theme"></span></li> </ul> <div class="darkmode-toggle"><label for="darkmode-toggle" class="desc">主题模式:</label> <div class="darkmode-switch"><div class="item day"><svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" class="icon light-icon"><path d="M512 256a42.667 42.667 0 0 0 42.667-42.667V128a42.667 42.667 0 0 0-85.334 0v85.333A42.667 42.667 0 0 0 512 256zm384 213.333h-85.333a42.667 42.667 0 0 0 0 85.334H896a42.667 42.667 0 0 0 0-85.334zM256 512a42.667 42.667 0 0 0-42.667-42.667H128a42.667 42.667 0 0 0 0 85.334h85.333A42.667 42.667 0 0 0 256 512zm9.387-298.667a42.667 42.667 0 0 0-59.307 62.72l61.44 59.307a42.667 42.667 0 0 0 31.147 11.947 42.667 42.667 0 0 0 30.72-13.227 42.667 42.667 0 0 0 0-60.16zm459.946 133.974a42.667 42.667 0 0 0 29.44-11.947l61.44-59.307a42.667 42.667 0 0 0-57.6-62.72l-61.44 60.587a42.667 42.667 0 0 0 0 60.16 42.667 42.667 0 0 0 28.16 13.227zM512 768a42.667 42.667 0 0 0-42.667 42.667V896a42.667 42.667 0 0 0 85.334 0v-85.333A42.667 42.667 0 0 0 512 768zm244.48-79.36a42.667 42.667 0 0 0-59.307 61.44l61.44 60.587a42.667 42.667 0 0 0 29.44 11.946 42.667 42.667 0 0 0 30.72-12.8 42.667 42.667 0 0 0 0-60.586zm-488.96 0-61.44 59.307a42.667 42.667 0 0 0 0 60.586 42.667 42.667 0 0 0 30.72 12.8 42.667 42.667 0 0 0 28.587-10.666l61.44-59.307a42.667 42.667 0 0 0-59.307-61.44zM512 341.333A170.667 170.667 0 1 0 682.667 512 170.667 170.667 0 0 0 512 341.333z" fill="currentColor"></path></svg></div> <div class="item auto active"><svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" class="icon auto-icon"><path d="M460.864 539.072H564.8L510.592 376l-49.728 163.072zM872 362.368V149.504H659.648L510.528 0l-149.12 149.504H149.12v212.928L0 511.872l149.12 149.504v212.928h212.352l149.12 149.504 149.12-149.504h212.352V661.376l149.12-149.504L872 362.368zM614.464 693.12l-31.616-90.624H438.272l-31.616 90.624h-85.888l144.576-407.68h90.368l144.576 407.68h-85.824zm0 0" fill="currentColor"></path></svg></div> <div class="item night"><svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" class="icon dark-icon"><path d="M935.539 630.402c-11.43-11.432-28.674-14.739-43.531-8.354-46.734 20.103-96.363 30.297-147.508 30.297-99.59 0-193.221-38.784-263.64-109.203-108.637-108.637-139.61-270.022-78.908-411.148a39.497 39.497 0 0 0-51.886-51.887c-52.637 22.64-100.017 54.81-140.826 95.616-85.346 85.346-132.346 198.821-132.346 319.52 0 120.7 47.001 234.172 132.347 319.519S408.063 947.11 528.76 947.11c120.7 0 234.172-47.003 319.52-132.351 40.809-40.81 72.978-88.19 95.616-140.826a39.497 39.497 0 0 0-8.356-43.532z" fill="currentColor"></path></svg></div></div> <!----></div></div></div></button> <div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/sharding-core-doc/guide/introduce.html" class="nav-link"><i class="iconfont icon-creative"></i>
+  使用指南
+</a></div><div class="nav-item"><a href="https://xuejm.gitee.io/sharding-core-doc/" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="iconfont icon-note"></i>
+  国内镜像
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div></nav> <div class="nav-links"><div class="nav-item"><div class="dropdown-wrapper"><button type="button" aria-label="Select language" class="dropdown-title"><svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" class="icon i18n-icon" style="width:1rem;height:1rem;vertical-align:middle;margin-left:1rem;"><path d="M639.981 344.075c14.805 44.45 34.542 79.023 69.084 113.596 29.603-29.634 49.34-69.146 64.145-113.596H639.981zM314.33 591.024h128.29l-64.145-172.865-64.145 172.865z" fill="currentColor"></path> <path d="M807.746 116.882H215.643c-54.274 0-98.681 44.45-98.681 98.78v592.677c0 54.329 44.407 98.78 98.68 98.78h592.104c54.273 0 98.681-44.451 98.681-98.78V215.66c0-54.329-39.475-98.78-98.68-98.78zM565.971 754.01c-9.866 9.878-19.738 9.878-29.603 9.878-4.94 0-14.805 0-19.738-4.939-4.939-4.939-9.872 0-9.872-4.939s-4.932-9.878-9.865-19.756c-4.94-9.878-4.94-14.817-9.872-24.695L467.29 655.23H294.592l-19.737 54.33c-9.866 19.755-14.805 34.572-19.738 44.45-4.939 9.878-14.804 9.878-29.603 9.878-9.871 0-19.737-4.939-29.609-9.878-9.865-9.878-14.798-14.817-14.798-24.695 0-4.939 0-9.878 4.933-19.756 4.939-9.878 4.939-14.817 9.865-24.695l108.553-276.583c4.939-9.878 4.939-19.756 9.872-29.633 4.932-9.878 9.865-19.756 14.798-24.695 4.939-4.94 9.872-14.817 19.737-19.756 9.872-4.94 19.738-4.94 29.61-4.94 9.865 0 19.73 0 29.603 4.94 9.865 4.939 14.804 9.878 19.737 19.756 4.933 4.939 9.866 14.817 14.798 24.695 4.94 9.877 9.872 19.755 14.805 34.572l108.553 271.644c9.865 19.756 14.804 34.573 14.804 44.451-4.939 4.94-9.872 14.817-14.804 24.695zm271.378-192.62c-54.273-19.756-93.748-44.451-128.29-74.085-34.536 34.573-78.943 59.268-133.223 74.085l-14.798-24.695c54.273-14.817 98.68-34.573 133.223-69.146-34.542-34.573-64.145-79.024-74.017-128.413h-49.34V319.38h133.228c-9.877-14.817-19.743-34.573-29.609-49.39l14.799-4.94c9.871 14.818 24.676 34.574 34.542 54.33h123.35v24.695h-49.34c-14.798 49.39-39.468 93.84-69.077 123.474 34.541 29.634 74.01 54.329 128.29 69.146l-19.738 24.695z" fill="currentColor"></path></svg> <span class="arrow"></span></button> <ul class="nav-dropdown"><li class="dropdown-item"><a href="/sharding-core-doc/tenant/" aria-current="page" class="nav-link router-link-exact-active router-link-active active"><!---->
+  简体中文
+</a></li><li class="dropdown-item"><a href="/sharding-core-doc/en/" class="nav-link"><!---->
+  English
+</a></li></ul></div></div></div> <a rel="noopener noreferrer" href="https://github.com/xuejmnet/sharding-core" target="_blank" class="repo-link can-hide">
+  GitHub
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> <!----> <div class="content__navbar-end"></div></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><div vocab="https://schema.org/" typeof="Person" class="blogger-info mobile"><div data-balloon-pos="down" role="navigation" class="blogger hasIntro"><img property="image" alt="Blogger Avatar" src="/sharding-core-doc/logo.svg" class="avatar round"> <div property="name" class="name">xuejiaming</div> <meta property="url" content="/sharding-core-doc/intro/"></div> <div class="num-wrapper"><div><div class="num">108</div> <div>文章</div></div> <div><div class="num">20</div> <div>分类</div></div> <div><div class="num">4</div> <div>标签</div></div> <div><div class="num">108</div> <div>时间轴</div></div></div> <div class="media-links-wrapper"><a href="https://github.com/xuejmnet" rel="noopener noreferrer" target="_blank" aria-label="Github" data-balloon-pos="up" class="media-link"><span class="sr-only">Github</span> <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" class="icon icon-github"><circle cx="512" cy="512" r="512" fill="#171515"></circle> <path d="M509.423 146.442c-200.317 0-362.756 162.42-362.756 362.8 0 160.266 103.936 296.24 248.109 344.217 18.139 3.327 24.76-7.872 24.76-17.486 0-8.613-.313-31.427-.49-61.702-100.912 21.923-122.205-48.63-122.205-48.63-16.495-41.91-40.28-53.067-40.28-53.067-32.937-22.51 2.492-22.053 2.492-22.053 36.407 2.566 55.568 37.386 55.568 37.386 32.362 55.438 84.907 39.43 105.58 30.143 3.296-23.444 12.667-39.43 23.032-48.498-80.557-9.156-165.246-40.28-165.246-179.297 0-39.604 14.135-71.988 37.342-97.348-3.731-9.178-16.18-46.063 3.556-96.009 0 0 30.46-9.754 99.76 37.19 28.937-8.048 59.97-12.071 90.823-12.211 30.807.14 61.843 4.165 90.822 12.21 69.26-46.944 99.663-37.189 99.663-37.189 19.792 49.946 7.34 86.831 3.61 96.01 23.25 25.359 37.29 57.742 37.29 97.347 0 139.366-84.82 170.033-165.637 179.013 13.026 11.2 24.628 33.342 24.628 67.182 0 48.498-.445 87.627-.445 99.521 0 9.702 6.535 20.988 24.945 17.444 144.03-48.067 247.881-183.95 247.881-344.175 0-200.378-162.442-362.798-362.802-362.798z" fill="#FFF"></path></svg></a></div></div> <hr> <!----> <div class="content__sidebar-top"></div> <nav class="sidebar-nav-links"><div class="nav-item"><a href="/sharding-core-doc/guide/introduce.html" class="nav-link"><i class="iconfont icon-creative"></i>
+  使用指南
+</a></div><div class="nav-item"><a href="https://xuejm.gitee.io/sharding-core-doc/" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="iconfont icon-note"></i>
+  国内镜像
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <a rel="noopener noreferrer" href="https://github.com/xuejmnet/sharding-core" target="_blank" class="repo-link">
+  GitHub
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav> <!----> <div class="content__sidebar-center"></div> <ul class="sidebar-links"><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading clickable open"><i class="iconfont icon-creative"></i> <span class="title">开发者文档</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/sharding-core-doc/deveploer/architecture/" class="sidebar-link"><i class="iconfont icon-launch"></i>架构</a></li><li><a href="/sharding-core-doc/deveploer/execute-process/" class="sidebar-link"><i class="iconfont icon-launch"></i>执行流程</a></li></ul></section></li><li><a href="/sharding-core-doc/important/" class="sidebar-link"><i class="iconfont icon-launch"></i>重要</a></li><li><a href="/sharding-core-doc/guide-upgrade-3-4/" class="sidebar-link"><i class="iconfont icon-launch"></i>x.3升级到x.4指南</a></li><li><a href="/sharding-core-doc/guide-upgrade-5-6/" class="sidebar-link"><i class="iconfont icon-launch"></i>x.5升级到x.6指南</a></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading clickable"><i class="iconfont icon-creative"></i> <span class="title">指南</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading clickable"><i class="iconfont icon-stack"></i> <span class="title">分表</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading clickable"><i class="iconfont icon-mysql"></i> <span class="title">分库</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading clickable"><i class="iconfont icon-overflow"></i> <span class="title">分表且分库</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading clickable"><i class="iconfont icon-overflow"></i> <span class="title">读写分离</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading clickable"><i class="iconfont icon-creative"></i> <span class="title">路由</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading clickable"><i class="iconfont icon-creative"></i> <span class="title">查询</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading clickable"><i class="iconfont icon-creative"></i> <span class="title">高级</span> <span class="arrow right"></span></p> <!----></section></li><li><a href="/sharding-core-doc/question/" class="sidebar-link"><i class="iconfont icon-launch"></i>常见的问题</a></li><li><a href="/sharding-core-doc/abp/" class="sidebar-link"><i class="iconfont icon-launch"></i>AbpVNext</a></li><li><a href="/sharding-core-doc/unit-test-coverage/" class="sidebar-link"><i class="iconfont icon-launch"></i>单元测试覆盖率</a></li><li><a href="/sharding-core-doc/benchmark/" class="sidebar-link"><i class="iconfont icon-launch"></i>性能测试</a></li><li><a href="/sharding-core-doc/query-notes/" class="sidebar-link"><i class="iconfont icon-launch"></i>查询注意事项</a></li><li><a href="/sharding-core-doc/tenant/" aria-current="page" class="active sidebar-link"><i class="iconfont icon-launch"></i>多租户</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/sharding-core-doc/tenant/#背景" class="sidebar-link">背景</a></li><li class="sidebar-sub-header"><a href="/sharding-core-doc/tenant/#功能" class="sidebar-link">功能</a></li><li class="sidebar-sub-header"><a href="/sharding-core-doc/tenant/#场景" class="sidebar-link">场景</a></li><li class="sidebar-sub-header"><a href="/sharding-core-doc/tenant/#首先我们创建一个aspnetcore的项目" class="sidebar-link">首先我们创建一个AspNetCore的项目</a></li><li class="sidebar-sub-header"><a href="/sharding-core-doc/tenant/#添加依赖" class="sidebar-link">添加依赖</a></li><li class="sidebar-sub-header"><a href="/sharding-core-doc/tenant/#公共用户存储" class="sidebar-link">公共用户存储</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/sharding-core-doc/tenant/#创建用户系统" class="sidebar-link heading3">创建用户系统</a></li><li class="sidebar-sub-header"><a href="/sharding-core-doc/tenant/#创建一个租户的dbcontext" class="sidebar-link heading3">创建一个租户的DbContext</a></li><li class="sidebar-sub-header"><a href="/sharding-core-doc/tenant/#创建动态租户参数" class="sidebar-link heading3">创建动态租户参数</a></li><li class="sidebar-sub-header"><a href="/sharding-core-doc/tenant/#编写用户注册接口" class="sidebar-link heading3">编写用户注册接口</a></li></ul></li><li class="sidebar-sub-header"><a href="/sharding-core-doc/tenant/#租户系统" class="sidebar-link">租户系统</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/sharding-core-doc/tenant/#新增租户系统的订单信息" class="sidebar-link heading3">新增租户系统的订单信息</a></li><li class="sidebar-sub-header"><a href="/sharding-core-doc/tenant/#新增订单路由" class="sidebar-link heading3">新增订单路由</a></li><li class="sidebar-sub-header"><a href="/sharding-core-doc/tenant/#添加租户中间件" class="sidebar-link heading3">添加租户中间件</a></li><li class="sidebar-sub-header"><a href="/sharding-core-doc/tenant/#配置租户扩展初始化数据" class="sidebar-link heading3">配置租户扩展初始化数据</a></li><li class="sidebar-sub-header"><a href="/sharding-core-doc/tenant/#配置多租户" class="sidebar-link heading3">配置多租户</a></li><li class="sidebar-sub-header"><a href="/sharding-core-doc/tenant/#编写租户操作" class="sidebar-link heading3">编写租户操作</a></li></ul></li><li class="sidebar-sub-header"><a href="/sharding-core-doc/tenant/#启动项目" class="sidebar-link">启动项目</a></li><li class="sidebar-sub-header"><a href="/sharding-core-doc/tenant/#登录租户" class="sidebar-link">登录租户</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/sharding-core-doc/tenant/#addorder" class="sidebar-link heading3">AddOrder</a></li><li class="sidebar-sub-header"><a href="/sharding-core-doc/tenant/#updateorder" class="sidebar-link heading3">UpdateOrder</a></li><li class="sidebar-sub-header"><a href="/sharding-core-doc/tenant/#getorders" class="sidebar-link heading3">GetOrders</a></li></ul></li><li class="sidebar-sub-header"><a href="/sharding-core-doc/tenant/#总结" class="sidebar-link">总结</a></li></ul></li></ul> <!----> <div class="content__sidebar-bottom"></div> <!----></aside> <main class="page"><nav class="breadcrumb disable"><!----></nav> <!----> <div class="content__page-top"></div> <div vocab="https://schema.org/" typeof="Article" class="page-title"><h1><i class="iconfont icon-launch"></i> <span property="headline">多租户</span></h1> <div class="page-info"><!----> <!----><!----><span aria-label="写作日期📅" data-balloon-pos="down" class="time-info"><svg viewBox="0 0 1030 1024" xmlns="http://www.w3.org/2000/svg" class="icon calendar-icon"><path d="M716.4 110.137c0-18.753-14.72-33.473-33.472-33.473-18.753 0-33.473 14.72-33.473 33.473v33.473h66.993v-33.473zm-334.87 0c0-18.753-14.72-33.473-33.473-33.473s-33.52 14.72-33.52 33.473v33.473h66.993v-33.473zm468.81 33.52H716.4v100.465c0 18.753-14.72 33.473-33.472 33.473a33.145 33.145 0 0 1-33.473-33.473V143.657H381.53v100.465c0 18.753-14.72 33.473-33.473 33.473a33.145 33.145 0 0 1-33.473-33.473V143.657H180.6A134.314 134.314 0 0 0 46.66 277.595v535.756A134.314 134.314 0 0 0 180.6 947.289h669.74a134.36 134.36 0 0 0 133.94-133.938V277.595a134.314 134.314 0 0 0-133.94-133.938zm33.473 267.877H147.126a33.145 33.145 0 0 1-33.473-33.473c0-18.752 14.72-33.473 33.473-33.473h736.687c18.752 0 33.472 14.72 33.472 33.473a33.145 33.145 0 0 1-33.472 33.473z" fill="currentColor"></path></svg> <span property="datePublished">2022-1-11</span></span><span role="navigation" aria-label="分类🌈" data-balloon-pos="down" class="category-info enable"><svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" class="icon category-icon"><path d="M148.41 106.992h282.176c22.263 0 40.31 18.048 40.31 40.31V429.48c0 22.263-18.047 40.31-40.31 40.31H148.41c-22.263 0-40.311-18.047-40.311-40.31V147.302c0-22.263 18.048-40.31 40.311-40.31zm-.854 446.486H429.73c22.263 0 40.311 18.048 40.311 40.31v282.176c0 22.263-18.048 40.312-40.31 40.312H147.555c-22.263 0-40.311-18.049-40.311-40.312V593.79c0-22.263 18.048-40.311 40.31-40.311zm446.371-446.486h282.176c22.263 0 40.31 18.048 40.31 40.31V429.48c0 22.263-18.047 40.31-40.31 40.31H593.927c-22.263 0-40.311-18.047-40.311-40.31V147.302c0-22.263 18.048-40.31 40.31-40.31zm136.293 813.51H623.926c-40.925 0-74.22-33.388-74.22-74.425V623.992c0-41.038 33.387-74.424 74.425-74.424h222.085c41.038 0 74.424 33.226 74.424 74.067v114.233c0 10.244-8.304 18.548-18.547 18.548s-18.548-8.304-18.548-18.548V623.635c0-20.388-16.746-36.974-37.33-36.974H624.13c-20.585 0-37.331 16.747-37.331 37.33v222.086c0 20.585 16.654 37.331 37.126 37.331H730.22c10.243 0 18.547 8.304 18.547 18.547 0 10.244-8.304 18.547-18.547 18.547z" fill="currentColor"></path></svg> <span property="articleSection">多租户</span></span><!----><span aria-label="阅读时间⌛" data-balloon-pos="down" class="reading-time-info"><svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" class="icon timer-icon"><path d="M799.387 122.15c4.402-2.978 7.38-7.897 7.38-13.463v-1.165c0-8.933-7.38-16.312-16.312-16.312H256.33c-8.933 0-16.311 7.38-16.311 16.312v1.165c0 5.825 2.977 10.874 7.637 13.592 4.143 194.44 97.22 354.963 220.201 392.763-122.204 37.542-214.893 196.511-220.2 389.397-4.661 5.049-7.638 11.651-7.638 19.03v5.825h566.49v-5.825c0-7.379-2.849-13.981-7.509-18.9-5.049-193.016-97.867-351.985-220.2-389.527 123.24-37.67 216.446-198.453 220.588-392.892zM531.16 450.445v352.632c117.674 1.553 211.787 40.778 211.787 88.676H304.097c0-48.286 95.149-87.382 213.728-88.676V450.445c-93.077-3.107-167.901-81.297-167.901-177.093 0-8.803 6.99-15.793 15.793-15.793 8.803 0 15.794 6.99 15.794 15.793 0 80.261 63.69 145.635 142.01 145.635s142.011-65.374 142.011-145.635c0-8.803 6.99-15.793 15.794-15.793s15.793 6.99 15.793 15.793c0 95.019-73.789 172.82-165.96 177.093z" fill="currentColor"></path></svg> <span>大约 11 分钟</span> <meta property="timeRequired" content="PT11M"></span></div> <!----> <hr></div> <div class="anchor-place-holder"><aside id="anchor"><div class="anchor-wrapper"><ul class="anchor-list"><li class="anchor"><a href="/sharding-core-doc/tenant/#背景" class="anchor-link heading2"><div>背景</div></a></li><li class="anchor"><a href="/sharding-core-doc/tenant/#功能" class="anchor-link heading2"><div>功能</div></a></li><li class="anchor"><a href="/sharding-core-doc/tenant/#场景" class="anchor-link heading2"><div>场景</div></a></li><li class="anchor"><a href="/sharding-core-doc/tenant/#首先我们创建一个aspnetcore的项目" class="anchor-link heading2"><div>首先我们创建一个AspNetCore的项目</div></a></li><li class="anchor"><a href="/sharding-core-doc/tenant/#添加依赖" class="anchor-link heading2"><div>添加依赖</div></a></li><li class="anchor"><a href="/sharding-core-doc/tenant/#公共用户存储" class="anchor-link heading2"><div>公共用户存储</div></a></li><li class="anchor"><a href="/sharding-core-doc/tenant/#创建用户系统" class="anchor-link heading3"><div>创建用户系统</div></a></li><li class="anchor"><a href="/sharding-core-doc/tenant/#创建一个租户的dbcontext" class="anchor-link heading3"><div>创建一个租户的DbContext</div></a></li><li class="anchor"><a href="/sharding-core-doc/tenant/#创建动态租户参数" class="anchor-link heading3"><div>创建动态租户参数</div></a></li><li class="anchor"><a href="/sharding-core-doc/tenant/#编写用户注册接口" class="anchor-link heading3"><div>编写用户注册接口</div></a></li><li class="anchor"><a href="/sharding-core-doc/tenant/#租户系统" class="anchor-link heading2"><div>租户系统</div></a></li><li class="anchor"><a href="/sharding-core-doc/tenant/#新增租户系统的订单信息" class="anchor-link heading3"><div>新增租户系统的订单信息</div></a></li><li class="anchor"><a href="/sharding-core-doc/tenant/#新增订单路由" class="anchor-link heading3"><div>新增订单路由</div></a></li><li class="anchor"><a href="/sharding-core-doc/tenant/#添加租户中间件" class="anchor-link heading3"><div>添加租户中间件</div></a></li><li class="anchor"><a href="/sharding-core-doc/tenant/#配置租户扩展初始化数据" class="anchor-link heading3"><div>配置租户扩展初始化数据</div></a></li><li class="anchor"><a href="/sharding-core-doc/tenant/#配置多租户" class="anchor-link heading3"><div>配置多租户</div></a></li><li class="anchor"><a href="/sharding-core-doc/tenant/#编写租户操作" class="anchor-link heading3"><div>编写租户操作</div></a></li><li class="anchor"><a href="/sharding-core-doc/tenant/#启动项目" class="anchor-link heading2"><div>启动项目</div></a></li><li class="anchor"><a href="/sharding-core-doc/tenant/#登录租户" class="anchor-link heading2"><div>登录租户</div></a></li><li class="anchor"><a href="/sharding-core-doc/tenant/#addorder" class="anchor-link heading3"><div>AddOrder</div></a></li><li class="anchor"><a href="/sharding-core-doc/tenant/#updateorder" class="anchor-link heading3"><div>UpdateOrder</div></a></li><li class="anchor"><a href="/sharding-core-doc/tenant/#getorders" class="anchor-link heading3"><div>GetOrders</div></a></li><li class="anchor"><a href="/sharding-core-doc/tenant/#总结" class="anchor-link heading2"><div>总结</div></a></li></ul></div></aside></div> <!----> <div class="content__content-top"></div> <div class="theme-default-content content__default"><h2 id="背景"><a href="#背景" class="header-anchor">#</a> 背景</h2> <p>因为之前有小伙伴在使用<code>ShardingCore</code>的时候问过我是否可以利用ShardingCore的分库功能实现多租户呢，我的回答是可以的，但是需要针对分库对象进行路由的编写，相当于我一个项目需要实现多租户所有的表都需要实现分库才可以，那么这个在实际应用中将是不切实际的，所以虽然分库可以用来进行多租户但是一般没人会真的这样操作，那么就没有办法在ShardingCore使用合理的多租户外加分表分库了吗，针对这个问题<code>ShardingCore</code>在新的版本x.4.x.x+中进行了实现,<a href="https://www.cnblogs.com/xuejiaming/p/15782298.html" target="_blank" rel="noopener noreferrer">博客<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <h2 id="功能"><a href="#功能" class="header-anchor">#</a> 功能</h2> <p><code>ShardingCore</code>x.4.x.x+版本中具体实现了哪些功能呢</p> <ul><li>多配置支持,可以针对每个租户或者这个配置进行单独的分表分库读写分离的链接配置</li> <li>多数据库配置，支持多配置下每个配置都可以拥有自己的数据库来进行分表分库读写分离</li> <li>动态多配置，支持动态添加多配置(目前不支持动态删减多配置,后续会支持如果有需要)</li></ul> <h2 id="场景"><a href="#场景" class="header-anchor">#</a> 场景</h2> <p>假设我们有这么一个多租户系统，这个系统在我们创建好账号后会分配给我们一个单独的数据库和对应的表信息,之后用户可以利用这个租户配置信息进行操作处理</p> <h2 id="首先我们创建一个aspnetcore的项目"><a href="#首先我们创建一个aspnetcore的项目" class="header-anchor">#</a> 首先我们创建一个AspNetCore的项目</h2> <p><img src="https://img2020.cnblogs.com/blog/1346660/202201/1346660-20220109204747170-1484976526.png" alt="">
+这边才用的.Net6版本的webapi</p> <h2 id="添加依赖"><a href="#添加依赖" class="header-anchor">#</a> 添加依赖</h2> <p><img src="https://img2020.cnblogs.com/blog/1346660/202201/1346660-20220110135052157-537177258.png" alt=""></p> <p>这边我们添加了三个包,分别是<code>ShardingCore</code>,<code>Microsoft.EntityFrameworkCore.SqlServer</code>,<code>Pomelo.EntityFrameworkCore.MySql</code>,其中<code>ShardingCore</code>用的是预览版的如果不勾选那么将无法显示出来,为什么我们需要添加额外的两个数据库驱动呢,原因是因为我们需要在不同的租户下实现不同的数据库的配置,比如租户A和我们签订的协议里面有说明系统使用开源数据库,或者希望使用Linux平台那么可以针对租户A进行配置<code>MySql</code>或者<code>PgSql</code>,租户B是资深软粉说需要使用<code>MSSQL</code>那么就可以针对其配置<code>MSSQL</code>.一般情况下我们可能不会出现多数据库的情况但是为了照顾到特殊情况我们这边也针对这种情况进行了支持。</p> <h2 id="公共用户存储"><a href="#公共用户存储" class="header-anchor">#</a> 公共用户存储</h2> <p>首先在我还没有创建租户的时候是不存在数据库的所以我的数据自然而然不会存在当前租户下,这边我们采用的是存储到其他数据库中,假设我们使用一个公共的数据库作为用户系统.</p> <h3 id="创建用户系统"><a href="#创建用户系统" class="header-anchor">#</a> 创建用户系统</h3> <p>创建系统用户和创建系统用户在数据库内的映射关系</p> <div class="language-c# line-numbers-mode"><pre class="language-text"><code>    public class SysUser
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Password { get; set; }
+        public DateTime CreationTime { get; set; }
+        public bool IsDeleted { get; set; }
+    }
+    public class SysUserMap:IEntityTypeConfiguration&lt;SysUser&gt;
+    {
+        public void Configure(EntityTypeBuilder&lt;SysUser&gt; builder)
+        {
+            builder.HasKey(o =&gt; o.Id);
+            builder.Property(o =&gt; o.Id).IsRequired().IsUnicode(false).HasMaxLength(50);
+            builder.Property(o =&gt; o.Name).IsRequired().HasMaxLength(50);
+            builder.Property(o =&gt; o.Password).IsRequired().IsUnicode(false).HasMaxLength(50);
+            builder.HasQueryFilter(o =&gt; o.IsDeleted == false);
+            builder.ToTable(nameof(SysUser));
+        }
+    }
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br></div></div><p>创建这个数据库该有的配置信息表，便于后期启动后重建</p> <div class="language-c# line-numbers-mode"><pre class="language-text"><code>    public class SysUserTenantConfig
+    {
+        public string Id { get; set; }
+        public string UserId { get; set; }
+        /// &lt;summary&gt;
+        /// 添加ShardingCore配置的Json包
+        /// &lt;/summary&gt;
+        public string ConfigJson { get; set; }
+        public DateTime CreationTime { get; set; }
+        public bool IsDeleted { get; set; }
+    }
+    public class SysUserTenantConfigMap:IEntityTypeConfiguration&lt;SysUserTenantConfig&gt;
+    {
+        public void Configure(EntityTypeBuilder&lt;SysUserTenantConfig&gt; builder)
+        {
+            builder.HasKey(o =&gt; o.Id);
+            builder.Property(o =&gt; o.Id).IsRequired().IsUnicode(false).HasMaxLength(50);
+            builder.Property(o =&gt; o.UserId).IsRequired().IsUnicode(false).HasMaxLength(50);
+            builder.Property(o =&gt; o.ConfigJson).IsRequired().HasMaxLength(2000);
+            builder.HasQueryFilter(o =&gt; o.IsDeleted == false);
+            builder.ToTable(nameof(SysUserTenantConfig));
+        }
+    }
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br></div></div><p>创建对应的系统用户存储DbContext</p> <div class="language-c# line-numbers-mode"><pre class="language-text"><code>
+    public class IdentityDbContext:DbContext
+    {
+        public IdentityDbContext(DbContextOptions&lt;IdentityDbContext&gt; options):base(options)
+        {
+            
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfiguration(new SysUserMap());
+            modelBuilder.ApplyConfiguration(new SysUserTenantConfigMap());
+        }
+    }
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br></div></div><h3 id="创建一个租户的dbcontext"><a href="#创建一个租户的dbcontext" class="header-anchor">#</a> 创建一个租户的DbContext</h3> <div class="language-c# line-numbers-mode"><pre class="language-text"><code>    public class TenantDbContext:AbstractShardingDbContext,IShardingTableDbContext
+    {
+        public TenantDbContext(DbContextOptions&lt;TenantDbContext&gt; options) : base(options)
+        {
+        }
+
+        public IRouteTail RouteTail { get; set; }
+    }
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div><p>目前我们先定义好后续进行编写内部的租户代码</p> <h3 id="创建动态租户参数"><a href="#创建动态租户参数" class="header-anchor">#</a> 创建动态租户参数</h3> <p>动态租户分片配置信息在<code>ShardingCore</code>只需要实现<code>IVirtualDataSourceConfigurationParams&lt;TShardingDbContext&gt;</code>接口,但是这个接口有很多参数需要填写,所以这边框架针对这个接口进行了默认参数的抽象类<code>AbstractVirtualDataSourceConfigurationParams&lt;TShardingDbContext&gt;</code>。
+这边我们针对配置参数进行配置采用新建一个配置json的对象</p> <div class="language-c# line-numbers-mode"><pre class="language-text"><code>    public class ShardingTenantOptions
+    {
+        public  string ConfigId { get; set;}
+        public  int Priority { get; set;}
+        public  string DefaultDataSourceName { get; set;}
+        public  string DefaultConnectionString { get; set;}
+        public DbTypeEnum DbType { get; set; }
+    }
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div><p>参数里面配置了当前数据库,这边比较简单我们就暂时使用单表分库的模式来实现,目前暂时不对每个租户分库进行演示。之后并且编写<code>SqlServer</code>和<code>MySql</code>的配置支持</p> <div class="language-c# line-numbers-mode"><pre class="language-text"><code>
+    public class SqlShardingConfiguration : AbstractVirtualDataSourceConfigurationParams&lt;TenantDbContext&gt;
+    {
+        private static readonly ILoggerFactory efLogger = LoggerFactory.Create(builder =&gt;
+        {
+            builder.AddFilter((category, level) =&gt; category == DbLoggerCategory.Database.Command.Name &amp;&amp; level == LogLevel.Information).AddConsole();
+        });
+        public override string ConfigId { get; }
+        public override int Priority { get; }
+        public override string DefaultDataSourceName { get; }
+        public override string DefaultConnectionString { get; }
+        public override ITableEnsureManager TableEnsureManager { get; }
+
+        private readonly DbTypeEnum _dbType;
+        public SqlShardingConfiguration(ShardingTenantOptions options)
+        {
+            ConfigId = options.ConfigId;
+            Priority = options.Priority;
+            DefaultDataSourceName = options.DefaultDataSourceName;
+            DefaultConnectionString = options.DefaultConnectionString;
+            _dbType = options.DbType;
+            //用来快速判断是否存在数据库中的表
+            if (_dbType == DbTypeEnum.MSSQL)
+            {
+                TableEnsureManager = new SqlServerTableEnsureManager&lt;TenantDbContext&gt;();
+            }
+            else if (_dbType == DbTypeEnum.MYSQL)
+            {
+                TableEnsureManager = new MySqlTableEnsureManager&lt;TenantDbContext&gt;();
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+        public override DbContextOptionsBuilder UseDbContextOptionsBuilder(string connectionString,
+            DbContextOptionsBuilder dbContextOptionsBuilder)
+        {
+            switch (_dbType)
+            {
+                case DbTypeEnum.MSSQL:
+                    {
+                        dbContextOptionsBuilder.UseSqlServer(connectionString).UseLoggerFactory(efLogger);
+                    }
+                    break;
+                case DbTypeEnum.MYSQL:
+                    {
+                        dbContextOptionsBuilder.UseMySql(connectionString, new MySqlServerVersion(new Version())).UseLoggerFactory(efLogger);
+                    }
+                    break;
+                default: throw new NotImplementedException();
+            }
+            return dbContextOptionsBuilder;
+        }
+
+        public override DbContextOptionsBuilder UseDbContextOptionsBuilder(DbConnection dbConnection,
+            DbContextOptionsBuilder dbContextOptionsBuilder)
+        {
+            switch (_dbType)
+            {
+                case DbTypeEnum.MSSQL:
+                {
+                    dbContextOptionsBuilder.UseSqlServer(dbConnection).UseLoggerFactory(efLogger);
+                    }
+                    break;
+                case DbTypeEnum.MYSQL:
+                {
+                    dbContextOptionsBuilder.UseMySql(dbConnection, new MySqlServerVersion(new Version())).UseLoggerFactory(efLogger);
+                    }
+                    break;
+                default: throw new NotImplementedException();
+            }
+            return dbContextOptionsBuilder;
+        }
+    }
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br><span class="line-number">75</span><br></div></div><h3 id="编写用户注册接口"><a href="#编写用户注册接口" class="header-anchor">#</a> 编写用户注册接口</h3> <div class="language-c# line-numbers-mode"><pre class="language-text"><code>
+    [Route(&quot;api/[controller]/[action]&quot;)]
+    [ApiController]
+    [AllowAnonymous]
+    public class PassportController:ControllerBase
+    {
+        private readonly IdentityDbContext _identityDbContext;
+
+        public PassportController(IdentityDbContext identityDbContext)
+        {
+            _identityDbContext = identityDbContext;
+        }
+        [HttpPost]
+        public async Task&lt;IActionResult&gt; Register(RegisterRequest request)
+        {
+            if (await _identityDbContext.Set&lt;SysUser&gt;().AnyAsync(o =&gt; o.Name == request.Name))
+                return BadRequest(&quot;user not exists&quot;);
+            var sysUser = new SysUser()
+            {
+                Id = Guid.NewGuid().ToString(&quot;n&quot;),
+                Name = request.Name,
+                Password = request.Password,
+                CreationTime=DateTime.Now
+            };
+            var shardingTenantOptions = new ShardingTenantOptions()
+            {
+                ConfigId = sysUser.Id,
+                Priority = new Random().Next(1,10),
+                DbType = request.DbType,
+                DefaultDataSourceName = &quot;ds0&quot;,
+                DefaultConnectionString = GetDefaultString(request.DbType,sysUser.Id)
+            };
+            var sysUserTenantConfig = new SysUserTenantConfig()
+            {
+                Id = Guid.NewGuid().ToString(&quot;n&quot;),
+                UserId = sysUser.Id,
+                CreationTime = DateTime.Now,
+                ConfigJson = JsonConvert.SerializeObject(shardingTenantOptions)
+            };
+            await _identityDbContext.AddAsync(sysUser);
+            await _identityDbContext.AddAsync(sysUserTenantConfig);
+            await _identityDbContext.SaveChangesAsync();
+            //注册完成后进行配置生成
+            DynamicShardingHelper.DynamicAppendVirtualDataSourceConfig(new SqlShardingConfiguration(shardingTenantOptions));
+            return Ok();
+        }
+        [HttpPost]
+        public async Task&lt;IActionResult&gt; Login(LoginRequest request)
+        {
+            var sysUser = await _identityDbContext.Set&lt;SysUser&gt;().FirstOrDefaultAsync(o=&gt;o.Name==request.Name&amp;&amp;o.Password==request.Password);
+            if (sysUser == null)
+                return BadRequest(&quot;name or password error&quot;);
+
+            //秘钥，就是标头，这里用Hmacsha256算法，需要256bit的密钥
+            var securityKey = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(&quot;123123!@#!@#123123&quot;)), SecurityAlgorithms.HmacSha256);
+            //Claim，JwtRegisteredClaimNames中预定义了好多种默认的参数名，也可以像下面的Guid一样自己定义键名.
+            //ClaimTypes也预定义了好多类型如role、email、name。Role用于赋予权限，不同的角色可以访问不同的接口
+            //相当于有效载荷
+            var claims = new Claim[] {
+                new Claim(JwtRegisteredClaimNames.Iss,&quot;https://localhost:5000&quot;),
+                new Claim(JwtRegisteredClaimNames.Aud,&quot;api&quot;),
+                new Claim(&quot;id&quot;,Guid.NewGuid().ToString(&quot;n&quot;)),
+                new Claim(&quot;uid&quot;,sysUser.Id),
+            };
+            SecurityToken securityToken = new JwtSecurityToken(
+                signingCredentials: securityKey,
+                expires: DateTime.Now.AddHours(2),//过期时间
+                claims: claims
+            );
+            var token = new JwtSecurityTokenHandler().WriteToken(securityToken);
+            return Ok(token);
+        }
+
+        private string GetDefaultString(DbTypeEnum dbType, string userId)
+        {
+            switch (dbType)
+            {
+                case DbTypeEnum.MSSQL: return $&quot;Data Source=localhost;Initial Catalog=DB{userId};Integrated Security=True;&quot;;
+                case DbTypeEnum.MYSQL: return $&quot;server=127.0.0.1;port=3306;database=DB{userId};userid=root;password=L6yBtV6qNENrwBy7;&quot;;
+                default: throw new NotImplementedException();
+            }
+        }
+    }
+    
+    public class RegisterRequest
+    {
+        public string Name { get; set; }
+        public string Password { get; set; }
+        public DbTypeEnum DbType { get; set; }
+    }
+
+    public class LoginRequest
+    {
+        public string Name { get; set; }
+        public string Password { get; set; }
+    }
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br><span class="line-number">75</span><br><span class="line-number">76</span><br><span class="line-number">77</span><br><span class="line-number">78</span><br><span class="line-number">79</span><br><span class="line-number">80</span><br><span class="line-number">81</span><br><span class="line-number">82</span><br><span class="line-number">83</span><br><span class="line-number">84</span><br><span class="line-number">85</span><br><span class="line-number">86</span><br><span class="line-number">87</span><br><span class="line-number">88</span><br><span class="line-number">89</span><br><span class="line-number">90</span><br><span class="line-number">91</span><br><span class="line-number">92</span><br><span class="line-number">93</span><br><span class="line-number">94</span><br><span class="line-number">95</span><br><span class="line-number">96</span><br></div></div><p>简单来说明一下,这边我们采用的是用户的id作为租户id,将租户id作为数据库配置,来支持多配置模式。到此为止我们的用户系统就已经完成了是不是十分的简单仅仅几段代码,用户这边注册完成后将会创建对应的数据库和对应的表,如果你是分表的那么将会自动创建对应的数据库表等信息。</p> <h2 id="租户系统"><a href="#租户系统" class="header-anchor">#</a> 租户系统</h2> <p>租户系统我们做一个订单的简单演示,使用订单id取模,取模取5来进行分表操作</p> <h3 id="新增租户系统的订单信息"><a href="#新增租户系统的订单信息" class="header-anchor">#</a> 新增租户系统的订单信息</h3> <div class="language-c# line-numbers-mode"><pre class="language-text"><code>    public class Order
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public DateTime CreationTime { get; set; }
+        public bool IsDeleted { get; set; }
+    }
+    public class OrderMap:IEntityTypeConfiguration&lt;Order&gt;
+    {
+        public void Configure(EntityTypeBuilder&lt;Order&gt; builder)
+        {
+            builder.HasKey(o =&gt; o.Id);
+            builder.Property(o =&gt; o.Id).IsRequired().IsUnicode(false).HasMaxLength(50);
+            builder.Property(o =&gt; o.Name).IsRequired().HasMaxLength(100);
+            builder.HasQueryFilter(o =&gt; o.IsDeleted == false);
+            builder.ToTable(nameof(Order));
+        }
+    }
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br></div></div><h3 id="新增订单路由"><a href="#新增订单路由" class="header-anchor">#</a> 新增订单路由</h3> <div class="language-c# line-numbers-mode"><pre class="language-text"><code>public class OrderVirtualTableRoute:AbstractSimpleShardingModKeyStringVirtualTableRoute&lt;Order&gt;
+{
+      public OrderVirtualTableRoute() : base(2, 5)
+      {
+      }
+
+      public override void Configure(EntityMetadataTableBuilder&lt;Order&gt; builder)
+      {
+          builder.ShardingProperty(o =&gt; o.Id);
+      }
+}
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br></div></div><p>简单的字符串取模</p> <h3 id="添加租户中间件"><a href="#添加租户中间件" class="header-anchor">#</a> 添加租户中间件</h3> <p>添加租户中间件,在系统中如果使用多配置那么就必须要指定本次创建的dbcontext使用的是哪个配置</p> <div class="language-c# line-numbers-mode"><pre class="language-text"><code>
+    public class TenantSelectMiddleware
+    {
+        private readonly RequestDelegate _next;
+        private readonly IVirtualDataSourceManager&lt;TenantDbContext&gt; _virtualDataSourceManager;
+
+        public TenantSelectMiddleware(RequestDelegate next, IVirtualDataSourceManager&lt;TenantDbContext&gt; virtualDataSourceManager)
+        {
+            _next = next;
+            _virtualDataSourceManager = virtualDataSourceManager;
+        }
+
+        public async Task Invoke(HttpContext context)
+        {
+
+            if (context.Request.Path.ToString().StartsWith(&quot;/api/tenant&quot;, StringComparison.CurrentCultureIgnoreCase))
+            {
+                if (!context.User.Identity.IsAuthenticated)
+                {
+                    await DoUnAuthorized(context, &quot;not found tenant id&quot;);
+                    return;
+                }
+
+                var tenantId = context.User.Claims.FirstOrDefault((o) =&gt; o.Type == &quot;uid&quot;)?.Value;
+                if (string.IsNullOrWhiteSpace(tenantId))
+                {
+                    await DoUnAuthorized(context, &quot;not found tenant id&quot;);
+                    return;
+                }
+
+                using (_virtualDataSourceManager.CreateScope(tenantId))
+                {
+                    await _next(context);
+                }
+            }
+            else
+            {
+                await _next(context);
+            }
+        }
+
+        private async Task DoUnAuthorized(HttpContext context, string msg)
+        {
+            context.Response.StatusCode = 403;
+            await context.Response.WriteAsync(msg);
+        }
+    }
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br></div></div><p>该中间件拦截<code>/api/tenant</code>路径下的所有请求并且针对这些请求添加对应的租户信息</p> <h3 id="配置租户扩展初始化数据"><a href="#配置租户扩展初始化数据" class="header-anchor">#</a> 配置租户扩展初始化数据</h3> <div class="language-c# line-numbers-mode"><pre class="language-text"><code>
+    public static class TenantExtension
+    {
+        public static void InitTenant(this IServiceProvider serviceProvider)
+        {
+            using (var scope = serviceProvider.CreateScope())
+            {
+                var identityDbContext = scope.ServiceProvider.GetRequiredService&lt;IdentityDbContext&gt;();
+                identityDbContext.Database.EnsureCreated();
+                var sysUserTenantConfigs = identityDbContext.Set&lt;SysUserTenantConfig&gt;().ToList();
+                if (sysUserTenantConfigs.Any())
+                {
+                    foreach (var sysUserTenantConfig in sysUserTenantConfigs)
+                    {
+                        var shardingTenantOptions = JsonConvert.DeserializeObject&lt;ShardingTenantOptions&gt;(sysUserTenantConfig.ConfigJson);
+                        DynamicShardingHelper.DynamicAppendVirtualDataSourceConfig(
+                            new SqlShardingConfiguration(shardingTenantOptions));
+                    }
+                }
+            }
+        }
+    }
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br></div></div><p>这边因为我们针对租户信息进行了初始化而不是硬编码,所以需要一个在启动的时候对租户信息进行动态添加</p> <h3 id="配置多租户"><a href="#配置多租户" class="header-anchor">#</a> 配置多租户</h3> <p>启动配置<code>Startup</code></p> <div class="language-c# line-numbers-mode"><pre class="language-text"><code>
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+
+builder.Services.AddControllers();
+builder.Services.AddAuthentication();
+#region 用户系统配置
+
+builder.Services.AddDbContext&lt;IdentityDbContext&gt;(o =&gt;
+    o.UseSqlServer(&quot;Data Source=localhost;Initial Catalog=IdDb;Integrated Security=True;&quot;));
+//生成密钥
+var keyByteArray = Encoding.ASCII.GetBytes(&quot;123123!@#!@#123123&quot;);
+var signingKey = new SymmetricSecurityKey(keyByteArray);
+//认证参数
+builder.Services.AddAuthentication(&quot;Bearer&quot;)
+    .AddJwtBearer(o =&gt;
+    {
+        o.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = signingKey,
+            ValidateIssuer = true,
+            ValidIssuer = &quot;https://localhost:5000&quot;,
+            ValidateAudience = true,
+            ValidAudience = &quot;api&quot;,
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero,
+            RequireExpirationTime = true,
+        };
+    });
+#endregion
+#region 配置ShardingCore
+builder.Services.AddShardingDbContext&lt;TenantDbContext&gt;()
+    .AddEntityConfig(op =&gt;
+    {
+        op.CreateShardingTableOnStart = true;
+        op.EnsureCreatedWithOutShardingTable = true;
+        op.AddShardingTableRoute&lt;OrderVirtualTableRoute&gt;();
+    })
+    .AddConfig(op =&gt;
+    {
+        //默认配置一个
+        op.ConfigId = $&quot;test_{Guid.NewGuid():n}&quot;;
+        op.Priority = 99999;
+        op.AddDefaultDataSource(&quot;ds0&quot;, &quot;Data Source=localhost;Initial Catalog=TestTenantDb;Integrated Security=True;&quot;);
+        op.UseShardingQuery((conStr, b) =&gt;
+        {
+            b.UseSqlServer(conStr);
+        });
+        op.UseShardingTransaction((conn, b) =&gt;
+        {
+            b.UseSqlServer(conn);
+        });
+    }).EnsureMultiConfig(ShardingConfigurationStrategyEnum.ThrowIfNull);
+
+#endregion
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+app.Services.GetRequiredService&lt;IShardingBootstrapper&gt;().Start();
+//初始化启动配置租户信息
+app.Services.InitTenant();
+app.UseAuthorization();
+app.UseAuthorization();
+//在认证后启用租户选择中间件
+app.UseMiddleware&lt;TenantSelectMiddleware&gt;();
+
+app.MapControllers();
+
+app.Run();
+
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br></div></div><h3 id="编写租户操作"><a href="#编写租户操作" class="header-anchor">#</a> 编写租户操作</h3> <div class="language-c# line-numbers-mode"><pre class="language-text"><code>
+    [Route(&quot;api/tenant/[controller]/[action]&quot;)]
+    [ApiController]
+    [Authorize(AuthenticationSchemes = &quot;Bearer&quot;)]
+    public class TenantController : ControllerBase
+    {
+        private readonly TenantDbContext _tenantDbContext;
+
+        public TenantController(TenantDbContext tenantDbContext)
+        {
+            _tenantDbContext = tenantDbContext;
+        }
+        public async Task&lt;IActionResult&gt; AddOrder()
+        {
+            var order = new Order()
+            {
+                Id = Guid.NewGuid().ToString(&quot;n&quot;),
+                CreationTime = DateTime.Now,
+                Name = new Random().Next(1,100)+&quot;_name&quot;
+            };
+            await _tenantDbContext.AddAsync(order);
+            await _tenantDbContext.SaveChangesAsync();
+            return Ok(order.Id);
+        }
+        public async Task&lt;IActionResult&gt; UpdateOrder([FromQuery]string id)
+        {
+            var order =await _tenantDbContext.Set&lt;Order&gt;().FirstOrDefaultAsync(o=&gt;o.Id==id);
+            if (order == null) return BadRequest();
+            order.Name = new Random().Next(1, 100) + &quot;_name&quot;;
+            await _tenantDbContext.SaveChangesAsync();
+            return Ok(order.Id);
+        }
+        public async Task&lt;IActionResult&gt; GetOrders()
+        {
+            var orders =await _tenantDbContext.Set&lt;Order&gt;().ToListAsync();
+            return Ok(orders);
+        }
+    }
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br></div></div><h2 id="启动项目"><a href="#启动项目" class="header-anchor">#</a> 启动项目</h2> <p>这边我们基本上已经配置好我们所需要的之后我们就可以直接启动项目了
+<img src="https://img2020.cnblogs.com/blog/1346660/202201/1346660-20220110213028837-1684806586.png" alt=""></p> <p>这边我们通过接口注册了一个TenantA的用户并且选择了使用MSSQL,这边成就帮我们自动生成好了对应的数据库表结构
+接下来我么再注册一个TenantB用户选择MySql
+<img src="https://img2020.cnblogs.com/blog/1346660/202201/1346660-20220110213234665-1363047961.png" alt=""></p> <p>通过截图我们可以看到<code>ShardingCore</code>也是为我们创建好了对应的数据库和对应的表信息</p> <h2 id="登录租户"><a href="#登录租户" class="header-anchor">#</a> 登录租户</h2> <p>首先我们登录</p> <p>TenantA用户token</p> <div class="language-shell line-numbers-mode"><pre class="language-shell"><code>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAwIiwiYXVkIjoiYXBpIiwiaWQiOiJkNGMwZjZiNzI5MzE0M2VlYWM0Yjg3NzUwYzE4MWUzOSIsInVpZCI6ImMxMWRkZjFmNTY0MjQwZjc5YTQzNTEzZGMwNmVjZGMxIiwiZXhwIjoxNjQxODI4ODQ0fQ.zJefwnmcIEZm-kizlN7DhwTRgGxiCg52Esa8QmHiEKY
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>TenantB用户token</p> <div class="language-shell line-numbers-mode"><pre class="language-shell"><code>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAwIiwiYXVkIjoiYXBpIiwiaWQiOiIwNzY4NzUwMmVjYzY0NTMyOGFkNTcwZDRkYjMwNDI3MSIsInVpZCI6ImVkODg4YTc3MzAwYTQ4NjZhYmUyNWY2MTE1NmEwZTQzIiwiZXhwIjoxNjQxODI4ODgxfQ.cL0d010jdXLXNGT8M0wsRMqn3VeIxFnV0keM0H3SPzo
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br></div></div><p>接下来我们分别对两个租户进行交叉处理</p> <h3 id="addorder"><a href="#addorder" class="header-anchor">#</a> AddOrder</h3> <p>租户A插入一个订单,订单Id：<code>aef6905f512a4f72baac5f149ef32d21</code> <img src="https://img2020.cnblogs.com/blog/1346660/202201/1346660-20220110214024317-2049319166.png" alt=""></p> <p>TenantB用户也插入一个订单,订单id:<code>450f5dd0e82442eca33dfcf3d57fafa3</code> <img src="https://img2020.cnblogs.com/blog/1346660/202201/1346660-20220110214159011-2067776275.png" alt="">
+两个用户处理
+<img src="https://img2020.cnblogs.com/blog/1346660/202201/1346660-20220110214520461-1662296101.png" alt=""></p> <p>通过日志打印明显能够感觉出来两者是区分了不同的数据库</p> <h3 id="updateorder"><a href="#updateorder" class="header-anchor">#</a> UpdateOrder</h3> <p><img src="https://img2020.cnblogs.com/blog/1346660/202201/1346660-20220110214426755-139567743.png" alt=""></p> <h3 id="getorders"><a href="#getorders" class="header-anchor">#</a> GetOrders</h3> <p><img src="https://img2020.cnblogs.com/blog/1346660/202201/1346660-20220110214805352-462848018.png" alt=""></p> <h2 id="总结"><a href="#总结" class="header-anchor">#</a> 总结</h2> <p>通过上述功能的演示相信很多小伙伴应该已经知道他具体的运作流程了,通过配置多个租户信息,在<code>ShardingCore</code>上实现多配置,动态配置,来保证在多租户模式下的分表分库读写分离依然可以使用,并且拥有跟好的适泛性。
+如果你需要开发一个大型程序,领导上来就是分库分表,那么在以前大概率是会花费非常多的精力在处理分片这件事情上,而最终项目是否可以做完并且使用还是一个巨大的问题,但是现在不一样了,毕竟<code>ShardingCore</code>之前并没有一款非常好用的分片组件在.net上,并且拥有非常完美的orm作为支持，基本上重来没有一个框架说多租户模式是可以选择数据库的,之前市面上所有的多租户你只能选择一种数据库,目前.Net在开源的状态下我相信会有越来越好的组件框架诞生,毕竟这么好的语言如果配上丰富的生态那将是所有.Neter的福音。</p></div> <!----> <div class="content__content-bottom"></div> <footer class="page-meta"><div class="edit-link"><svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" class="icon edit-icon"><path d="M117.953 696.992 64.306 959.696l265.931-49.336 450.204-452.505-212.284-213.376-450.204 452.513zm496.384-296.326L219.039 797.993l-46.108-46.34L568.233 354.33l46.104 46.335zm345.357-122.99-114.45 115.04-212.288-213.377 114.45-115.035 212.288 213.371zm0 0" fill="currentColor"></path></svg> <a href="https://github.com/xuejmnet/sharding-core-doc/edit/main/docs/tenant.md" target="_blank" rel="noopener noreferrer">编辑此页</a></div> <div class="meta-item update-time"><span class="label">上次编辑于:</span> <span class="info">2022年1月11日 08:08</span></div> <div class="meta-item contributors"><span class="label">贡献者: </span> <span class="info"><span title="email: 326308290@qq.com" class="contributor">
+          xuejiaming
+        </span> <!----></span></div></footer> <div class="page-nav"><p class="inner"><span class="prev"><a href="/sharding-core-doc/query-notes/" class="prev"><svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" class="icon prev-icon"><path d="M906.783 588.79c-.02 8.499-6.882 15.36-15.38 15.37l-443.7-.01 75.704 191.682c2.52 6.42.482 13.763-5.038 17.91-5.52 4.168-13.138 4.147-18.616-.092L123.228 524.175a15.362 15.362 0 0 1-6-12.165c0-4.782 2.222-9.277 6-12.185L499.753 210.35a15.388 15.388 0 0 1 9.38-3.195c3.236 0 6.502 1.034 9.236 3.103 5.52 4.147 7.578 11.49 5.038 17.91L447.683 419.84l443.72-.01c8.498.01 15.36 6.881 15.36 15.36l.02 153.6z" fill="currentColor"></path></svg>
+        查询注意事项
+      </a></span> <!----></p></div> <!----> <!----> <div class="content__page-bottom"></div></main> <footer class="footer-wrapper"><div class="media-links-wrapper"><a href="https://github.com/xuejmnet" rel="noopener noreferrer" target="_blank" aria-label="Github" data-balloon-pos="up" class="media-link"><span class="sr-only">Github</span> <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" class="icon icon-github"><circle cx="512" cy="512" r="512" fill="#171515"></circle> <path d="M509.423 146.442c-200.317 0-362.756 162.42-362.756 362.8 0 160.266 103.936 296.24 248.109 344.217 18.139 3.327 24.76-7.872 24.76-17.486 0-8.613-.313-31.427-.49-61.702-100.912 21.923-122.205-48.63-122.205-48.63-16.495-41.91-40.28-53.067-40.28-53.067-32.937-22.51 2.492-22.053 2.492-22.053 36.407 2.566 55.568 37.386 55.568 37.386 32.362 55.438 84.907 39.43 105.58 30.143 3.296-23.444 12.667-39.43 23.032-48.498-80.557-9.156-165.246-40.28-165.246-179.297 0-39.604 14.135-71.988 37.342-97.348-3.731-9.178-16.18-46.063 3.556-96.009 0 0 30.46-9.754 99.76 37.19 28.937-8.048 59.97-12.071 90.823-12.211 30.807.14 61.843 4.165 90.822 12.21 69.26-46.944 99.663-37.189 99.663-37.189 19.792 49.946 7.34 86.831 3.61 96.01 23.25 25.359 37.29 57.742 37.29 97.347 0 139.366-84.82 170.033-165.637 179.013 13.026 11.2 24.628 33.342 24.628 67.182 0 48.498-.445 87.627-.445 99.521 0 9.702 6.535 20.988 24.945 17.444 144.03-48.067 247.881-183.95 247.881-344.175 0-200.378-162.442-362.798-362.802-362.798z" fill="#FFF"></path></svg></a></div> <!----> <div class="copyright">Copyright © 2022 xuejiaming</div></footer></div><div class="global-ui"><!----><!----><div id="pwa-install"><!----> <div id="install-modal-wrapper" style="display:none;"><div class="background"></div> <div class="install-modal"><div class="header"><button aria-label="关闭" class="close-button"><svg width="23" height="22" xmlns="http://www.w3.org/2000/svg" class="icon close-icon"><path fill-rule="evenodd" clip-rule="evenodd" d="M1.12.358a1.224 1.224 0 011.729 0l8.92 8.914L20.686.358a1.224 1.224 0 011.73 1.728L13.497 11l8.92 8.913a1.222 1.222 0 11-1.73 1.729l-8.919-8.913-8.92 8.913a1.224 1.224 0 01-1.729-1.729L10.04 11l-8.92-8.914a1.222 1.222 0 010-1.728z" fill="currentColor"></path></svg></button> <div class="logo"><!----> <div class="title"><h1></h1> <p class="desc">该应用可以安装在您的 PC 或移动设备上。这将使该 Web 应用程序外观和行为与其他应用程序相同。它将在出现在应用程序列表中，并可以固定到主屏幕，开始菜单或任务栏。此 Web 应用程序还将能够与其他应用程序和您的操作系统安全地进行交互。</p></div></div></div> <div class="content"><div class="highlight"><!----> <!----></div> <div class="description"><h3>详情</h3> <p></p></div></div> <div class="button-wrapper"><button class="install-button">
+        安装 <span></span></button> <button class="cancel-button">
+        取消
+      </button></div></div></div></div><div tabindex="-1" role="dialog" aria-hidden="true" class="pswp"><div class="pswp__bg"></div> <div class="pswp__scroll-wrap"><div class="pswp__container"><div class="pswp__item"></div> <div class="pswp__item"></div> <div class="pswp__item"></div></div> <div class="pswp__ui pswp__ui--hidden"><div class="pswp__top-bar"><div class="pswp__counter"></div> <button class="pswp__button pswp__button--close"></button> <button class="pswp__button pswp__button--share"></button> <button class="pswp__button pswp__button--fs"></button> <button class="pswp__button pswp__button--zoom"></button> <div class="pswp__preloader"><div class="pswp__preloader__icn"><div class="pswp__preloader__cut"><div class="pswp__preloader__donut"></div></div></div></div></div> <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class="pswp__share-tooltip"></div></div> <button class="pswp__button pswp__button--arrow--left"></button> <button class="pswp__button pswp__button--arrow--right"></button> <div class="pswp__caption"><div class="pswp__caption__center"></div></div></div></div></div></div></div>
+    <script src="/sharding-core-doc/assets/js/app.c30c90f5.js" defer></script><script src="/sharding-core-doc/assets/js/layout-Layout.68522c6f.js" defer></script><script src="/sharding-core-doc/assets/js/layout-Blog~layout-Layout~layout-NotFound.ed3b050f.js" defer></script><script src="/sharding-core-doc/assets/js/page-多租户.d1480e2a.js" defer></script><script src="/sharding-core-doc/assets/js/vendors~layout-Blog~layout-Layout~layout-NotFound.736063d3.js" defer></script>
+  </body>
+</html>
