@@ -34,11 +34,6 @@ module.exports = config({
       lang: "en-US",
       title: "ShardingCore Document",
       description: "ShardingCore Document",
-    },
-    "/5x/": {
-      lang: "5x",
-        title: "ShardingCore文档",
-        description: "ShardingCore x.5.x.x文档",
     }
   },
   themeConfig: {
@@ -69,7 +64,7 @@ module.exports = config({
           title: "开发者文档",
           icon: "creative",
           prefix: "deveploer/",
-          children: ["architecture","execute-process","query-notes"],
+          children: ["architecture","execute-process"],
         },
         "important",
         "guide-upgrade-3-4",
